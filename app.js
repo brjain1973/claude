@@ -48,9 +48,9 @@
       {k:'police',t:'chips',l:'Police verification done?',opts:['Yes','No']},
       {k:'address',t:'text',l:'Where they live',full:1,opt:1},
       {k:'photo',t:'photo',l:'Photo',full:1},
-      {k:'dlfile',t:'file',l:'Driving licence copy (front & back)',multi:1,full:1,hint:'Compulsory for drivers. Seen only by the Chairman, Secretary and Treasurer.'},
+      {k:'dlfile',t:'file',l:'Driving licence copy (front & back)',multi:1,full:1,hint:'Compulsory for drivers. Seen only by the Managing Committee office bearers and the Society office.'},
       {k:'idtype',t:'select',l:'Photo ID type',opts:['Aadhaar card (masked)','Voter ID card','Passport','Driving licence','Other govt ID with photo']},
-      {k:'idfile',t:'file',l:'Photo ID copy (front & back)',multi:1,full:1,hint:'Compulsory for every maid, helper, cook and other staff. For Aadhaar, upload the masked copy. Seen only by the Chairman, Secretary and Treasurer.'},
+      {k:'idfile',t:'file',l:'Photo ID copy (front & back)',multi:1,full:1,hint:'Compulsory for every maid, helper, cook and other staff. For Aadhaar, upload the masked copy. Seen only by the Managing Committee office bearers and the Society office.'},
       {k:'polfile',t:'file',l:'Police verification receipt',full:1,opt:1}]},
     vehicles:{label:'Vehicle',preset:4,summary:'reg',defaults:[{type:'2-wheeler'},{type:'2-wheeler'},{type:'4-wheeler'},{type:'4-wheeler'}],fields:[
       {k:'type',t:'chips',l:'Type',opts:['2-wheeler','2-wheeler EV','4-wheeler','4-wheeler EV'],full:1},

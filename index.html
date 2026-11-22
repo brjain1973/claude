@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=2">
+<link rel="stylesheet" href="app.css?v=3">
 </head>
 <body>
 <div class="wrap">
@@ -105,7 +105,7 @@
       <div class="field" id="f-idfile">
         <span class="l">Upload ID copy (front &amp; back)</span>
         <div class="filebtn"><label>Choose files<input type="file" id="idfile" accept=".pdf,image/*" multiple></label><span class="fn"></span></div>
-        <span class="hint">For Aadhaar, upload only the <b>masked Aadhaar</b> (first 8 digits hidden), downloadable from myaadhaar.uidai.gov.in. Seen only by the Chairman, Secretary and Treasurer.</span>
+        <span class="hint">For Aadhaar, upload only the <b>masked Aadhaar</b> (first 8 digits hidden), downloadable from myaadhaar.uidai.gov.in. Seen only by the Managing Committee office bearers and the Society office.</span>
         <span class="err">Please upload a copy of your photo ID.</span>
       </div>
       <div class="field full" data-only="owner">
@@ -217,9 +217,9 @@
     <h2>Check and submit</h2>
     <div class="review" id="review"></div>
     <label class="decl"><input type="checkbox" id="agree"><span id="decl-text"></span></label>
-    <label class="decl" id="dl-consent-row" hidden><input type="checkbox" id="dlconsent"><span>I have the consent of my staff to share their ID and driving licence copies. These are collected only for security verification of staff working in the flat, is seen only by the Chairman, Secretary and Treasurer, and will be deleted when the staff member leaves.</span></label>
+    <label class="decl" id="dl-consent-row" hidden><input type="checkbox" id="dlconsent"><span>I have the consent of my staff to share their ID and driving licence copies. These are collected only for security verification of staff working in the flat, are seen only by the Managing Committee office bearers and the Society office, and will be deleted when the staff member leaves.</span></label>
     <div class="alert" id="submit-err" hidden></div>
-    <p class="note">These details are used only for society records, notices and security, under the MCS Act and the society's bye-laws. They are stored only in the Society's own Google Drive. Phone numbers and emails are masked in staff files; full details are seen only by the Chairman, Secretary and Treasurer.</p>
+    <p class="note">These details are used only for society records, notices and security, under the MCS Act and the society's bye-laws. They are stored only in the Society's own Google Drive. ID copies are kept in a restricted folder, view-only, open only to the Managing Committee office bearers and the Society office.</p>
   </section>
 
   <!-- Done -->
@@ -240,7 +240,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=2"></script>
-<script src="app.js?v=2"></script>
+<script src="config.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
