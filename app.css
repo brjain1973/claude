@@ -121,3 +121,13 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 input[type=text],textarea{text-transform:uppercase}
 input[type=text]::placeholder,textarea::placeholder{text-transform:none}
 #code{text-transform:none}
+.tel .cc{max-width:68px;border-radius:8px 0 0 8px;border-right:0;background:var(--accent-soft);color:var(--accent);text-align:center;padding:11px 4px}
+.tel input:not(.cc){border-radius:0 8px 8px 0}
+.later{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.later input{width:18px;height:18px;margin-top:2px;flex:none}
+.langbar{display:flex;justify-content:flex-end;margin-bottom:-8px}
+.langbtn{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:99px;padding:5px 12px;cursor:pointer}
+.warnbanner{background:var(--amber-soft);color:var(--amber)}
+.up{font-size:12px;color:var(--ok)}
+.up.err2{color:var(--warn)}
+#save{flex:none}

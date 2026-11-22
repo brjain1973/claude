@@ -17,10 +17,13 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=4">
+<link rel="stylesheet" href="app.css?v=5">
 </head>
 <body>
 <div class="wrap">
+  <div class="langbar"><button type="button" id="lang-btn" class="langbtn">हिंदी</button></div>
+  <div class="banner warnbanner" id="inapp-banner" hidden>If the buttons for photos or files do not work, open this link in Chrome (Android) or Safari (iPhone): tap ⋮ or the share icon, then "Open in browser".</div>
+  <div class="banner" id="saved-banner" hidden></div>
   <div class="banner" id="preview-banner" hidden>Preview mode: the Society server is not connected yet, so nothing is saved.</div>
   <div class="install" id="install" hidden>
     <p id="install-text">Add this app to your home screen for quick access.</p>
@@ -82,14 +85,14 @@
       </div>
       <div class="field" id="f-mob">
         <label class="l" for="mob">Mobile (WhatsApp)</label>
-        <div class="tel"><span>+91</span><input type="tel" id="mob" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="98XXXXXXXX"></div>
-        <span class="hint">Must be a mobile number registered with the Society for this flat.</span>
-        <span class="err">Enter a 10-digit mobile number.</span>
+        <div class="tel"><input type="tel" class="cc" id="mobcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="mob" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="98XXXXXXXX"></div>
+        <span class="hint">Use the number registered with the Society for this flat. Owners abroad: change +91 to your country code.</span>
+        <span class="err">Enter a valid mobile number.</span>
       </div>
       <div class="field" id="f-alt">
         <label class="l" for="alt">Alternate mobile <span class="opt">optional</span></label>
-        <div class="tel"><span>+91</span><input type="tel" id="alt" inputmode="numeric" maxlength="11"></div>
-        <span class="err">Enter a 10-digit mobile number or leave blank.</span>
+        <div class="tel"><input type="tel" class="cc" id="altcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="alt" inputmode="numeric" maxlength="14"></div>
+        <span class="err">Enter a valid mobile number or leave blank.</span>
       </div>
       <div class="field full" id="f-email">
         <label class="l" for="email">Email for society notices</label>
@@ -105,9 +108,10 @@
       <div class="field" id="f-idfile">
         <span class="l">Upload ID copy (front &amp; back)</span>
         <div class="filebtn"><label>Choose files<input type="file" id="idfile" accept=".pdf,image/*" multiple></label><span class="fn"></span></div>
-        <span class="hint">For Aadhaar, upload only the <b>masked Aadhaar</b> (first 8 digits hidden), downloadable from myaadhaar.uidai.gov.in. Seen only by the Managing Committee office bearers and the Society office.</span>
-        <span class="err">Please upload a copy of your photo ID.</span>
+        <span class="hint">For Aadhaar, upload only the <b>masked Aadhaar</b> (first 8 digits hidden), downloadable from myaadhaar.uidai.gov.in. No Aadhaar? A voter ID, passport or driving licence is equally fine. Seen only by the Managing Committee office bearers and the Society office.</span>
+        <span class="err">Please upload a copy of your photo ID, or tick "upload later".</span>
       </div>
+      <label class="later full"><input type="checkbox" id="idlater"><span>I will upload my ID later (within 7 days)</span></label>
       <div class="field full" data-only="owner">
         <span class="l" style="margin-top:6px">Second name on the agreement (joint / associate member) <span class="opt">optional</span></span>
         <span class="hint">Fill this if another person is named on the agreement with you.</span>
@@ -119,8 +123,8 @@
       </div>
       <div class="field" data-only="owner" id="f-jmob">
         <label class="l" for="jmob">Joint member's mobile</label>
-        <div class="tel"><span>+91</span><input type="tel" id="jmob" inputmode="numeric" maxlength="11"></div>
-        <span class="err">Enter a 10-digit mobile number or leave blank.</span>
+        <div class="tel"><input type="tel" class="cc" id="jmobcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="jmob" inputmode="numeric" maxlength="14"></div>
+        <span class="err">Enter a valid mobile number or leave blank.</span>
       </div>
       <div class="field" data-only="owner" id="f-jemail">
         <label class="l" for="jemail">Joint member's email</label>
@@ -171,7 +175,8 @@
     <div class="cards" id="tenants"></div>
     <button type="button" class="add" data-add="tenants">+ Add another occupant</button>
     <h2 style="font-size:17px;margin-top:6px">Leave &amp; licence</h2>
-    <div class="grid">
+    <label class="later" id="llbt-row"><input type="checkbox" id="llbytenant"><span>I don't have these details; the tenant will fill them using their own link</span></label>
+    <div class="grid" id="ll-grid">
       <div class="field" id="f-llfrom"><label class="l" for="llfrom">From</label><input type="date" id="llfrom"><span class="err">Required.</span></div>
       <div class="field" id="f-llto"><label class="l" for="llto">To</label><input type="date" id="llto"><span class="err">Must be after the start date.</span></div>
       <div class="field" id="f-llreg"><span class="l">Agreement registered?</span><div class="chips"><label class="chip"><input type="radio" name="llreg" value="Yes"><span>Yes</span></label><label class="chip"><input type="radio" name="llreg" value="No"><span>No</span></label></div><span class="err">Please choose.</span></div>
@@ -206,7 +211,7 @@
     <div class="grid">
       <div class="field"><label class="l" for="ename">Name</label><input type="text" id="ename"></div>
       <div class="field"><label class="l" for="erel">Relation to you</label><select id="erel"><option value="">Select</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Father</option><option>Mother</option><option>Brother</option><option>Sister</option><option>Son-in-law</option><option>Daughter-in-law</option><option>Other relative</option><option>Friend</option><option>Neighbour</option><option>Colleague</option></select></div>
-      <div class="field" id="f-emob"><label class="l" for="emob">Mobile</label><div class="tel"><span>+91</span><input type="tel" id="emob" inputmode="numeric" maxlength="11"></div><span class="err">Enter a 10-digit mobile number or leave blank.</span></div>
+      <div class="field" id="f-emob"><label class="l" for="emob">Mobile</label><div class="tel"><input type="tel" class="cc" id="emobcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="emob" inputmode="numeric" maxlength="14"></div><span class="err">Enter a valid mobile number or leave blank.</span></div>
       <div class="field full"><label class="l" for="eaddr">Address</label><textarea id="eaddr" rows="2" placeholder="House / flat, building, area, city, PIN"></textarea></div>
       <div class="field full"><label class="l" for="rem">Anything else the office should know? <span class="opt">optional</span></label><textarea id="rem" rows="3"></textarea></div>
     </div>
@@ -228,7 +233,8 @@
     <h2>Thank you, KYC received</h2>
     <p>Your reference number</p>
     <div class="ref" id="ref"></div>
-    <p class="note">The office will check these details against the register. Please keep this number for any follow-up.</p>
+    <p class="note" id="done-note">The office will check these details against the register. Please keep this number for any follow-up.</p>
+    <p class="note">You can open the same link again at any time to add pending documents or update details. Your new entry replaces the earlier one.</p>
   </section>
 
   <footer>Venezia Co-op Housing Society Ltd · Lodha Venezia, G.D. Ambekar Marg, Kalachowki, Mumbai 400033 · mgmtcom.veneziab@gmail.com</footer>
@@ -237,10 +243,11 @@
 <div class="toasts" id="toasts" role="alert" aria-live="assertive"></div>
 <div class="nav" id="nav"><div class="in">
   <button type="button" class="btn" id="back">Back</button>
+  <button type="button" class="btn" id="save">Save</button>
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="config.js?v=5"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
