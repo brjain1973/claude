@@ -34,6 +34,21 @@
     'Second name on the agreement — full name':'एग्रीमेंट में दूसरा नाम — पूरा नाम',"Joint member's mobile":'संयुक्त सदस्य का मोबाइल',"Joint member's email":'संयुक्त सदस्य का ईमेल',
     "Flat owner's name as in the agreement":'एग्रीमेंट अनुसार फ्लैट मालिक का नाम','Who lives in the flat now?':'अभी फ्लैट में कौन रहता है?',
     "Everyone living in the flat under the leave & licence. The main tenant's name and mobile number are compulsory, so the Society can send them their own link to complete their KYC. Email is optional.":'लीव एंड लाइसेंस पर फ्लैट में रहने वाले सभी लोग। मुख्य किरायेदार का नाम और मोबाइल नंबर अनिवार्य है, ताकि सोसाइटी उन्हें KYC पूरा करने के लिए उनका अपना लिंक भेज सके। ईमेल वैकल्पिक है।',
+    'Keep these handy':'ये पास रखें',
+    "Don't have something right now? Fill what you can, tap Save, and come back to the same link later.":'अभी कुछ पास नहीं है? जितना हो सके भरें, सेव दबाएँ, और बाद में इसी लिंक से वापस आएँ।',
+    'Your registered agreement':'आपका रजिस्टर्ड एग्रीमेंट',"to write your name and the joint owner's name exactly as in it":'अपना और संयुक्त मालिक का नाम बिल्कुल उसी तरह लिखने के लिए',
+    'Your photo ID on your phone':'आपके फ़ोन में आपका फ़ोटो ID','masked Aadhaar, voter ID, passport or driving licence (photo or PDF, front and back)':'मास्क्ड आधार, वोटर ID, पासपोर्ट या ड्राइविंग लाइसेंस (फ़ोटो या PDF, आगे और पीछे)',
+    "Joint / co-owner's details":'संयुक्त / सह-मालिक का विवरण','name, mobile and email (optional, but please give as much as you can)':'नाम, मोबाइल और ईमेल (वैकल्पिक, पर जितना हो सके दें)',
+    'If you live in the flat':'अगर आप फ्लैट में रहते हैं','names, age group, mobile and email of family members living with you':'साथ रहने वाले परिवार के सदस्यों के नाम, आयु वर्ग, मोबाइल और ईमेल',
+    'If the flat is rented':'अगर फ्लैट किराए पर है',"your tenant's name, mobile and email, and your current address":'किरायेदार का नाम, मोबाइल और ईमेल, और आपका वर्तमान पता',
+    'Staff working in the flat':'फ्लैट में काम करने वाला स्टाफ','name, mobile and a photo; ID copy for maids, helpers and cooks; driving licence copy for drivers; police verification receipt if done':'नाम, मोबाइल और फ़ोटो; मेड, हेल्पर और कुक का ID; ड्राइवर का ड्राइविंग लाइसेंस; पुलिस वेरिफिकेशन रसीद (अगर हुई हो)',
+    'name, mobile and a photo; ID copy for maids, helpers and cooks; driving licence copy for drivers':'नाम, मोबाइल और फ़ोटो; मेड, हेल्पर और कुक का ID; ड्राइवर का ड्राइविंग लाइसेंस',
+    'Vehicles':'वाहन','registration number, make and model, parking slot':'रजिस्ट्रेशन नंबर, कंपनी और मॉडल, पार्किंग स्लॉट',
+    'Emergency contact':'आपातकालीन संपर्क','name, relation, mobile and address':'नाम, रिश्ता, मोबाइल और पता',
+    'Leave & licence agreement':'लीव एंड लाइसेंस एग्रीमेंट','registered copy, with start and end dates':'रजिस्टर्ड कॉपी, शुरू और खत्म होने की तारीख के साथ',
+    'Police verification receipt':'पुलिस वेरिफिकेशन रसीद','for you as a tenant':'किरायेदार के रूप में आपकी',
+    "Flat owner's name":'फ्लैट मालिक का नाम','as written in the agreement':'जैसा एग्रीमेंट में लिखा है',
+    'People living with you':'आपके साथ रहने वाले लोग','names, age group, mobile and email':'नाम, आयु वर्ग, मोबाइल और ईमेल',
     'My family and I':'मैं और मेरा परिवार','Other family members':'परिवार के अन्य सदस्य','A tenant':'किरायेदार','Nobody':'कोई नहीं',
     'Owner-occupied':'मालिक स्वयं रहते हैं',"My relatives live here; I don't":'मेरे रिश्तेदार रहते हैं; मैं नहीं','Given on leave & licence':'लीव एंड लाइसेंस पर दिया है','Vacant or locked':'खाली या बंद',
     'Your correspondence address':'आपका पत्राचार पता','Family members living in the flat':'फ्लैट में रहने वाले परिवार के सदस्य',
@@ -210,7 +225,32 @@
     s.push('emergency','review'); return s;
   }
   let cur='link';
+  const HANDY={
+    owner:[
+      ['📄','Your registered agreement','to write your name and the joint owner\'s name exactly as in it'],
+      ['🪪','Your photo ID on your phone','masked Aadhaar, voter ID, passport or driving licence (photo or PDF, front and back)'],
+      ['👥','Joint / co-owner\'s details','name, mobile and email (optional, but please give as much as you can)'],
+      ['👨‍👩‍👧','If you live in the flat','names, age group, mobile and email of family members living with you'],
+      ['🔑','If the flat is rented','your tenant\'s name, mobile and email, and your current address'],
+      ['🧹','Staff working in the flat','name, mobile and a photo; ID copy for maids, helpers and cooks; driving licence copy for drivers; police verification receipt if done'],
+      ['🚗','Vehicles','registration number, make and model, parking slot'],
+      ['📞','Emergency contact','name, relation, mobile and address']],
+    tenant:[
+      ['📄','Leave & licence agreement','registered copy, with start and end dates'],
+      ['🛡️','Police verification receipt','for you as a tenant'],
+      ['🪪','Your photo ID on your phone','masked Aadhaar, voter ID, passport or driving licence (photo or PDF, front and back)'],
+      ['🏠','Flat owner\'s name','as written in the agreement'],
+      ['👨‍👩‍👧','People living with you','names, age group, mobile and email'],
+      ['🧹','Staff working in the flat','name, mobile and a photo; ID copy for maids, helpers and cooks; driving licence copy for drivers'],
+      ['🚗','Vehicles','registration number, make and model, parking slot'],
+      ['📞','Emergency contact','name, relation, mobile and address']]
+  };
+  function renderHandy(){
+    const t=val('mode')==='tenant', box=$('handy'); if(!box) return;
+    box.innerHTML='<h3>'+esc(tr('Keep these handy'))+'</h3><ul>'+HANDY[t?'tenant':'owner'].map(x=>'<li><span class="hi">'+x[0]+'</span><span><b>'+esc(tr(x[1]))+'</b><small>'+esc(tr(x[2]))+'</small></span></li>').join('')+'</ul><p class="tip">'+esc(tr('Don\'t have something right now? Fill what you can, tap Save, and come back to the same link later.'))+'</p>';
+  }
   function applyMode(){
+    renderHandy();
     const t=val('mode')==='tenant';
     document.querySelectorAll('[data-only]').forEach(el=>el.hidden=el.dataset.only!==(t?'tenant':'owner'));
     $('llbt-row').hidden=t;
@@ -229,6 +269,7 @@
     const list=steps(), i=list.indexOf(cur);
     if(cur==='done'){ $('progress').hidden=true; $('nav').hidden=true; return; }
     $('nav').hidden=false; $('progress').hidden=cur==='link';
+    $('stepicon').textContent=({link:'🔗',start:'🏠',you:'🙋',occ:'🛋️',family:'👨‍👩‍👧',tenants:'🧳',tenantinfo:'🔑',staff:'🧹',vehicles:'🚗',emergency:'📞',review:'✅',done:'🎉'})[cur]||'';
     $('stepname').textContent=tr(document.querySelector('[data-step="'+cur+'"]').dataset.name);
     $('stepcount').textContent=(LANG==='hi'?'चरण ':'Step ')+(i+1)+(LANG==='hi'?' / ':' of ')+list.length;
     $('barfill').style.width=((i+1)/list.length*100)+'%';

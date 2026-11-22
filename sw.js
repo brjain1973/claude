@@ -1,7 +1,7 @@
 // Venezia KYC service worker: caches only the app's own screens so it opens fast.
 // It never caches member data: calls to the Society's Google server always go to the network.
-const CACHE = 'vkyc-v6';
-const SHELL = ['./', 'index.html', 'app.css?v=6', 'app.js?v=6', 'config.js?v=6', 'manifest.webmanifest',
+const CACHE = 'vkyc-v7';
+const SHELL = ['./', 'index.html', 'app.css?v=7', 'app.js?v=7', 'config.js?v=7', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

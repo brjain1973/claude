@@ -16,12 +16,22 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=6">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="app.css?v=7">
 </head>
 <body>
 <div class="wrap">
   <div class="langbar"><button type="button" id="lang-btn" class="langbtn">हिंदी</button></div>
+  <header class="hero">
+    <div class="brand"><img src="icons/icon-192.png" alt=""><div>
+      <div class="reg">VENEZIA CO-OP HOUSING SOCIETY LTD · TOWER B</div>
+      <h1>Resident KYC</h1>
+    </div></div>
+    <div id="progress">
+      <div class="stepinfo"><span class="stepicon" id="stepicon" aria-hidden="true"></span><span id="stepname"></span><span id="stepcount"></span></div>
+      <div class="bar"><i id="barfill"></i></div>
+    </div>
+  </header>
   <div class="banner warnbanner" id="inapp-banner" hidden>If the buttons for photos or files do not work, open this link in Chrome (Android) or Safari (iPhone): tap ⋮ or the share icon, then "Open in browser".</div>
   <div class="banner" id="saved-banner" hidden></div>
   <div class="banner" id="preview-banner" hidden>Preview mode: the Society server is not connected yet, so nothing is saved.</div>
@@ -29,16 +39,6 @@
     <p id="install-text">Add this app to your home screen for quick access.</p>
     <button type="button" id="install-btn" hidden>Install</button>
     <button type="button" class="close" id="install-close" aria-label="Dismiss">×</button>
-  </div>
-  <header>
-    <div class="brand"><img src="icons/icon-192.png" alt=""><div>
-      <div class="reg">REG. NO. MUM/SRA/HSG/(T.C.)/13171/2019 · TOWER B</div>
-      <h1>Venezia CHS — Resident KYC</h1>
-    </div></div>
-  </header>
-  <div id="progress">
-    <div class="stepinfo"><span id="stepname"></span><span id="stepcount"></span></div>
-    <div class="bar"><i id="barfill"></i></div>
   </div>
 
   <!-- 0. Link check -->
@@ -56,7 +56,8 @@
   <!-- 1. Start -->
   <section class="step" data-step="start" data-name="Your flat">
     <h2>Let's start with your flat</h2>
-    <p class="lead">Takes about 5 minutes. Keep your photo ID, your staff's photo IDs and your driver's licence copy handy.</p>
+    <p class="lead">Takes about 5–10 minutes. You can save and finish later, and upload documents later.</p>
+    <div class="handy" id="handy"></div>
     <div class="field" id="f-flat">
       <label class="l" for="flat">Flat number</label>
       <div class="flat"><span>B-</span><input type="text" id="flat" inputmode="numeric" maxlength="4" placeholder="2104" autocomplete="off" readonly></div>
@@ -114,7 +115,7 @@
       <label class="later full"><input type="checkbox" id="idlater"><span>I will upload my ID later (within 7 days)</span></label>
       <div class="field full" data-only="owner">
         <span class="l" style="margin-top:6px">Second name on the agreement (joint / associate member) <span class="opt">optional</span></span>
-        <span class="hint">Fill this if another person is named on the agreement with you.</span>
+        <span class="hint">Optional, but please fill in as much as you can. It helps the Society reach the right person for notices, emergencies and any transfer later.</span>
       </div>
       <div class="field full" data-only="owner" id="f-jname">
         <label class="l" for="jname">Second name on the agreement — full name</label>
@@ -258,7 +259,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=6"></script>
-<script src="app.js?v=6"></script>
+<script src="config.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
