@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Venezia CHS – Resident KYC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Resident KYC for Venezia Co-operative Housing Society Ltd, Tower B. Open only with the personal link sent to you by the Society.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#1d5c6b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Venezia KYC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <div class="banner" id="preview-banner" hidden>Preview mode: the Society server is not connected yet, so nothing is saved.</div>
+  <div class="install" id="install" hidden>
+    <p id="install-text">Add this app to your home screen for quick access.</p>
+    <button type="button" id="install-btn" hidden>Install</button>
+    <button type="button" class="close" id="install-close" aria-label="Dismiss">×</button>
+  </div>
+  <header>
+    <div class="brand"><img src="icons/icon-192.png" alt=""><div>
+      <div class="reg">REG. NO. MUM/SRA/HSG/(T.C.)/13171/2019 · TOWER B</div>
+      <h1>Venezia CHS — Resident KYC</h1>
+    </div></div>
+  </header>
+  <div id="progress">
+    <div class="stepinfo"><span id="stepname"></span><span id="stepcount"></span></div>
+    <div class="bar"><i id="barfill"></i></div>
+  </div>
+
+  <!-- 0. Link check -->
+  <section class="step" data-step="link" data-name="Your personal link">
+    <h2>Open your personal KYC link</h2>
+    <p class="lead" id="link-msg">This form opens only with the personal link the Society has sent to your registered mobile number on WhatsApp. Please tap that link once. If you have installed the app, paste the link or your 12-character code below.</p>
+    <div class="field" id="f-code">
+      <label class="l" for="code">Link or code</label>
+      <input type="text" id="code" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste the link or code here">
+      <span class="err">That code is not valid. Please check the WhatsApp message from the Society.</span>
+    </div>
+    <p class="note">For help, contact Rahul, Property Manager, at the Society office.</p>
+  </section>
+
+  <!-- 1. Start -->
+  <section class="step" data-step="start" data-name="Your flat">
+    <h2>Let's start with your flat</h2>
+    <p class="lead">Takes about 5 minutes. Keep your staff's details and your driver's licence copy handy.</p>
+    <div class="field" id="f-flat">
+      <label class="l" for="flat">Flat number</label>
+      <div class="flat"><span>B-</span><input type="text" id="flat" inputmode="numeric" maxlength="4" placeholder="2104" autocomplete="off" readonly></div>
+      <span class="hint">Filled in from your personal link.</span>
+      <span class="err">Flat number missing. Please open your personal link again.</span>
+    </div>
+    <div class="field" id="f-mode">
+      <span class="l">I am filling this as the</span>
+      <div class="cards">
+        <label class="card"><input type="radio" name="mode" value="owner"><span><b>Owner / member</b><small>First name on the agreement</small></span></label>
+        <label class="card"><input type="radio" name="mode" value="tenant"><span><b>Tenant / licensee</b><small>Living here on leave &amp; licence</small></span></label>
+      </div>
+      <span class="err">Please choose one.</span>
+    </div>
+  </section>
+
+  <!-- 2. You -->
+  <section class="step" data-step="you" data-name="Your details">
+    <h2 id="you-h">Your details</h2>
+    <div class="grid">
+      <div class="field full" id="f-name">
+        <label class="l" for="name" id="name-l">First name on the agreement</label>
+        <span class="hint" id="name-h">Full name of the person named first in your registered agreement, written exactly as in it.</span>
+        <input type="text" id="name" autocomplete="name">
+        <span class="err">Please enter your full name.</span>
+      </div>
+      <div class="field" id="f-mob">
+        <label class="l" for="mob">Mobile (WhatsApp)</label>
+        <div class="tel"><span>+91</span><input type="tel" id="mob" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="98XXXXXXXX"></div>
+        <span class="hint">Must be a mobile number registered with the Society for this flat.</span>
+        <span class="err">Enter a 10-digit mobile number.</span>
+      </div>
+      <div class="field" id="f-alt">
+        <label class="l" for="alt">Alternate mobile <span class="opt">optional</span></label>
+        <div class="tel"><span>+91</span><input type="tel" id="alt" inputmode="numeric" maxlength="11"></div>
+        <span class="err">Enter a 10-digit mobile number or leave blank.</span>
+      </div>
+      <div class="field full" id="f-email">
+        <label class="l" for="email">Email for society notices</label>
+        <input type="email" id="email" autocomplete="email" placeholder="name@example.com">
+        <span class="hint">AGM notices, circulars and bills go here. Use a mailbox you check and that isn't full.</span>
+        <span class="err">Enter a valid email address.</span>
+      </div>
+      <div class="field" id="f-idtype">
+        <label class="l" for="idtype">Your photo ID (compulsory)</label>
+        <select id="idtype"><option value="">Select</option><option>Aadhaar card (masked)</option><option>Voter ID card</option><option>Passport</option><option>Driving licence</option></select>
+        <span class="err">Please choose the ID you are uploading.</span>
+      </div>
+      <div class="field" id="f-idfile">
+        <span class="l">Upload ID copy (front &amp; back)</span>
+        <div class="filebtn"><label>Choose files<input type="file" id="idfile" accept=".pdf,image/*" multiple></label><span class="fn"></span></div>
+        <span class="hint">For Aadhaar, upload only the <b>masked Aadhaar</b> (first 8 digits hidden), downloadable from myaadhaar.uidai.gov.in. Seen only by the Chairman, Secretary and Treasurer.</span>
+        <span class="err">Please upload a copy of your photo ID.</span>
+      </div>
+      <div class="field full" data-only="owner">
+        <span class="l" style="margin-top:6px">Second name on the agreement (joint / associate member) <span class="opt">optional</span></span>
+        <span class="hint">Fill this if another person is named on the agreement with you.</span>
+      </div>
+      <div class="field full" data-only="owner" id="f-jname">
+        <label class="l" for="jname">Second name on the agreement — full name</label>
+        <input type="text" id="jname">
+        <span class="err">Please enter the joint member's name, or clear their mobile and email.</span>
+      </div>
+      <div class="field" data-only="owner" id="f-jmob">
+        <label class="l" for="jmob">Joint member's mobile</label>
+        <div class="tel"><span>+91</span><input type="tel" id="jmob" inputmode="numeric" maxlength="11"></div>
+        <span class="err">Enter a 10-digit mobile number or leave blank.</span>
+      </div>
+      <div class="field" data-only="owner" id="f-jemail">
+        <label class="l" for="jemail">Joint member's email</label>
+        <input type="email" id="jemail" placeholder="name@example.com">
+        <span class="err">Enter a valid email address or leave blank.</span>
+      </div>
+      <div class="field full" data-only="tenant" id="f-ownername">
+        <label class="l" for="ownername">Flat owner's name as in the agreement</label>
+        <span class="hint">The licensor named in your leave &amp; licence agreement.</span>
+        <input type="text" id="ownername">
+        <span class="err">Please enter the owner's name.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Occupancy (owner) -->
+  <section class="step" data-step="occ" data-name="Who lives here">
+    <h2>Who lives in the flat now?</h2>
+    <div class="field" id="f-occ">
+      <div class="cards">
+        <label class="card"><input type="radio" name="occ" value="self"><span><b>My family and I</b><small>Owner-occupied</small></span></label>
+        <label class="card"><input type="radio" name="occ" value="family"><span><b>Other family members</b><small>My relatives live here; I don't</small></span></label>
+        <label class="card"><input type="radio" name="occ" value="tenant"><span><b>A tenant</b><small>Given on leave &amp; licence</small></span></label>
+        <label class="card"><input type="radio" name="occ" value="vacant"><span><b>Nobody</b><small>Vacant or locked</small></span></label>
+      </div>
+      <span class="err">Please choose one.</span>
+    </div>
+    <div class="field" id="f-addr" hidden>
+      <label class="l" for="addr">Your correspondence address</label>
+      <textarea id="addr" rows="2"></textarea>
+    </div>
+  </section>
+
+  <!-- 4a. Family -->
+  <section class="step" data-step="family" data-name="Family">
+    <h2>Family members living in the flat</h2>
+    <p class="lead" id="fam-lead">Include yourself. Tap a block to fill it; leave the rest empty.</p>
+    <div class="alert" id="family-err" hidden></div>
+    <div class="cards" id="family"></div>
+    <button type="button" class="add" data-add="family">+ Add another family member</button>
+  </section>
+
+  <!-- 4b. Tenants -->
+  <section class="step" data-step="tenants" data-name="Occupants">
+    <h2 id="ten-h">Tenant details</h2>
+    <p class="lead" id="ten-lead"></p>
+    <div class="alert" id="tenants-err" hidden></div>
+    <div class="cards" id="tenants"></div>
+    <button type="button" class="add" data-add="tenants">+ Add another occupant</button>
+    <h2 style="font-size:17px;margin-top:6px">Leave &amp; licence</h2>
+    <div class="grid">
+      <div class="field" id="f-llfrom"><label class="l" for="llfrom">From</label><input type="date" id="llfrom"><span class="err">Required.</span></div>
+      <div class="field" id="f-llto"><label class="l" for="llto">To</label><input type="date" id="llto"><span class="err">Must be after the start date.</span></div>
+      <div class="field" id="f-llreg"><span class="l">Agreement registered?</span><div class="chips"><label class="chip"><input type="radio" name="llreg" value="Yes"><span>Yes</span></label><label class="chip"><input type="radio" name="llreg" value="No"><span>No</span></label></div><span class="err">Please choose.</span></div>
+      <div class="field" id="f-llpol"><span class="l">Police verification done?</span><div class="chips"><label class="chip"><input type="radio" name="llpol" value="Yes"><span>Yes</span></label><label class="chip"><input type="radio" name="llpol" value="No"><span>No</span></label></div><span class="err">Please choose.</span></div>
+      <div class="field full"><span class="l">Registered agreement <span class="opt">PDF or photo</span></span><div class="filebtn"><label>Choose file<input type="file" id="llfile" accept=".pdf,image/*"></label><span class="fn"></span></div></div>
+      <div class="field full"><span class="l">Police verification receipt</span><div class="filebtn"><label>Choose file<input type="file" id="llpolfile" accept=".pdf,image/*"></label><span class="fn"></span></div></div>
+    </div>
+  </section>
+
+  <!-- 5. Staff -->
+  <section class="step" data-step="staff" data-name="Staff">
+    <h2>Drivers, maids &amp; helpers</h2>
+    <p class="lead">Everyone who works in your flat, full time or part time. Skip if none. A driving licence copy is compulsory for every driver.</p>
+    <div class="alert" id="staff-err" hidden></div>
+    <div class="cards" id="staff"></div>
+    <button type="button" class="add" data-add="staff">+ Add another staff member</button>
+  </section>
+
+  <!-- 6. Vehicles -->
+  <section class="step" data-step="vehicles" data-name="Vehicles">
+    <h2>Vehicles parked in the society</h2>
+    <p class="lead">Skip if none. Listing a vehicle does not allot a parking slot.</p>
+    <div class="alert" id="vehicles-err" hidden></div>
+    <div class="cards" id="vehicles"></div>
+    <button type="button" class="add" data-add="vehicles">+ Add another vehicle</button>
+  </section>
+
+  <!-- 7. Emergency -->
+  <section class="step" data-step="emergency" data-name="Emergency contact">
+    <h2>Emergency contact</h2>
+    <p class="lead">Someone we can call if we can't reach you.</p>
+    <div class="grid">
+      <div class="field"><label class="l" for="ename">Name</label><input type="text" id="ename"></div>
+      <div class="field"><label class="l" for="erel">Relation to you</label><select id="erel"><option value="">Select</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Father</option><option>Mother</option><option>Brother</option><option>Sister</option><option>Son-in-law</option><option>Daughter-in-law</option><option>Other relative</option><option>Friend</option><option>Neighbour</option><option>Colleague</option></select></div>
+      <div class="field" id="f-emob"><label class="l" for="emob">Mobile</label><div class="tel"><span>+91</span><input type="tel" id="emob" inputmode="numeric" maxlength="11"></div><span class="err">Enter a 10-digit mobile number or leave blank.</span></div>
+      <div class="field full"><label class="l" for="eaddr">Address</label><textarea id="eaddr" rows="2" placeholder="House / flat, building, area, city, PIN"></textarea></div>
+      <div class="field full"><label class="l" for="rem">Anything else the office should know? <span class="opt">optional</span></label><textarea id="rem" rows="3"></textarea></div>
+    </div>
+  </section>
+
+  <!-- 8. Review -->
+  <section class="step" data-step="review" data-name="Review">
+    <h2>Check and submit</h2>
+    <div class="review" id="review"></div>
+    <label class="decl"><input type="checkbox" id="agree"><span id="decl-text"></span></label>
+    <label class="decl" id="dl-consent-row" hidden><input type="checkbox" id="dlconsent"><span>I have the driver's consent to share the driving licence copy. It is collected only for security and parking-access verification of drivers employed in the flat, is seen only by the Chairman, Secretary and Treasurer, and will be deleted when the driver leaves.</span></label>
+    <div class="alert" id="submit-err" hidden></div>
+    <p class="note">These details are used only for society records, notices and security, under the MCS Act and the society's bye-laws. They are stored only in the Society's own Google Drive. Phone numbers and emails are masked in staff files; full details are seen only by the Chairman, Secretary and Treasurer.</p>
+  </section>
+
+  <!-- Done -->
+  <section class="step done" data-step="done" data-name="Done">
+    <div class="tick">✓</div>
+    <h2>Thank you, KYC received</h2>
+    <p>Your reference number</p>
+    <div class="ref" id="ref"></div>
+    <p class="note">The office will check these details against the register. Please keep this number for any follow-up.</p>
+  </section>
+
+  <footer>Venezia Co-op Housing Society Ltd · Lodha Venezia, G.D. Ambekar Marg, Kalachowki, Mumbai 400033 · mgmtcom.veneziab@gmail.com</footer>
+</div>
+
+<div class="toasts" id="toasts" role="alert" aria-live="assertive"></div>
+<div class="nav" id="nav"><div class="in">
+  <button type="button" class="btn" id="back">Back</button>
+  <button type="button" class="btn primary" id="next">Next</button>
+</div></div>
+
+<script src="config.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>

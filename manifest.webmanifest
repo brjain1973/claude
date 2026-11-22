@@ -1,0 +1,18 @@
+{
+  "name": "Venezia CHS – Resident KYC",
+  "short_name": "Venezia KYC",
+  "description": "Resident KYC for Venezia Co-operative Housing Society Ltd, Tower B.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f5f6",
+  "theme_color": "#1d5c6b",
+  "lang": "en-IN",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
