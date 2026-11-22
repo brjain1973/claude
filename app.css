@@ -117,3 +117,7 @@ details[open] .chev{transform:rotate(90deg)}
 .ref{font-family:var(--f-mono);font-size:15px;background:var(--accent-soft);color:var(--accent);padding:6px 12px;border-radius:6px}
 footer{font-size:12px;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* Everything is saved in capitals except email IDs, so show it that way while typing. */
+input[type=text],textarea{text-transform:uppercase}
+input[type=text]::placeholder,textarea::placeholder{text-transform:none}
+#code{text-transform:none}
