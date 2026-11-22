@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="app.css?v=2">
 </head>
 <body>
 <div class="wrap">
@@ -53,7 +53,7 @@
   <!-- 1. Start -->
   <section class="step" data-step="start" data-name="Your flat">
     <h2>Let's start with your flat</h2>
-    <p class="lead">Takes about 5 minutes. Keep your staff's details and your driver's licence copy handy.</p>
+    <p class="lead">Takes about 5 minutes. Keep your photo ID, your staff's photo IDs and your driver's licence copy handy.</p>
     <div class="field" id="f-flat">
       <label class="l" for="flat">Flat number</label>
       <div class="flat"><span>B-</span><input type="text" id="flat" inputmode="numeric" maxlength="4" placeholder="2104" autocomplete="off" readonly></div>
@@ -184,7 +184,7 @@
   <!-- 5. Staff -->
   <section class="step" data-step="staff" data-name="Staff">
     <h2>Drivers, maids &amp; helpers</h2>
-    <p class="lead">Everyone who works in your flat, full time or part time. Skip if none. A driving licence copy is compulsory for every driver.</p>
+    <p class="lead">Everyone who works in your flat, full time or part time. Skip if none. A driving licence copy is compulsory for every driver, and a photo ID copy for every other staff member.</p>
     <div class="alert" id="staff-err" hidden></div>
     <div class="cards" id="staff"></div>
     <button type="button" class="add" data-add="staff">+ Add another staff member</button>
@@ -217,7 +217,7 @@
     <h2>Check and submit</h2>
     <div class="review" id="review"></div>
     <label class="decl"><input type="checkbox" id="agree"><span id="decl-text"></span></label>
-    <label class="decl" id="dl-consent-row" hidden><input type="checkbox" id="dlconsent"><span>I have the driver's consent to share the driving licence copy. It is collected only for security and parking-access verification of drivers employed in the flat, is seen only by the Chairman, Secretary and Treasurer, and will be deleted when the driver leaves.</span></label>
+    <label class="decl" id="dl-consent-row" hidden><input type="checkbox" id="dlconsent"><span>I have the consent of my staff to share their ID and driving licence copies. These are collected only for security verification of staff working in the flat, is seen only by the Chairman, Secretary and Treasurer, and will be deleted when the staff member leaves.</span></label>
     <div class="alert" id="submit-err" hidden></div>
     <p class="note">These details are used only for society records, notices and security, under the MCS Act and the society's bye-laws. They are stored only in the Society's own Google Drive. Phone numbers and emails are masked in staff files; full details are seen only by the Chairman, Secretary and Treasurer.</p>
   </section>
@@ -240,7 +240,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="config.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

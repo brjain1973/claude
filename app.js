@@ -48,8 +48,9 @@
       {k:'police',t:'chips',l:'Police verification done?',opts:['Yes','No']},
       {k:'address',t:'text',l:'Where they live',full:1,opt:1},
       {k:'photo',t:'photo',l:'Photo',full:1},
-      {k:'dlno',t:'text',l:'Driving licence number',upper:1,ph:'MH0120190012345'},
       {k:'dlfile',t:'file',l:'Driving licence copy (front & back)',multi:1,full:1,hint:'Compulsory for drivers. Seen only by the Chairman, Secretary and Treasurer.'},
+      {k:'idtype',t:'select',l:'Photo ID type',opts:['Aadhaar card (masked)','Voter ID card','Passport','Driving licence','Other govt ID with photo']},
+      {k:'idfile',t:'file',l:'Photo ID copy (front & back)',multi:1,full:1,hint:'Compulsory for every maid, helper, cook and other staff. For Aadhaar, upload the masked copy. Seen only by the Chairman, Secretary and Treasurer.'},
       {k:'polfile',t:'file',l:'Police verification receipt',full:1,opt:1}]},
     vehicles:{label:'Vehicle',preset:4,summary:'reg',defaults:[{type:'2-wheeler'},{type:'2-wheeler'},{type:'4-wheeler'},{type:'4-wheeler'}],fields:[
       {k:'type',t:'chips',l:'Type',opts:['2-wheeler','2-wheeler EV','4-wheeler','4-wheeler EV'],full:1},
@@ -112,7 +113,7 @@
   function refreshBlock(d){
     const kind=d.dataset.kind, sp=SPEC[kind], o=blockData(d), i=[...$(kind).children].indexOf(d)+1;
     d.querySelectorAll('input[data-upper]').forEach(el=>{ const v=el.value.toUpperCase().replace(/\s+/g,''); if(v!==el.value){ el.value=v; } });
-    if(kind==='staff'){ const drv=o.role==='Driver'; d.querySelector('[data-fk="dlfile"]').hidden=!drv; d.querySelector('[data-fk="dlno"]').hidden=!drv; }
+    if(kind==='staff'){ const drv=o.role==='Driver'; d.querySelector('[data-fk="dlfile"]').hidden=!drv; d.querySelector('[data-fk="idtype"]').hidden=drv; d.querySelector('[data-fk="idfile"]').hidden=drv; }
     d.classList.toggle('filled',isFilled(kind,o));
     const main=o[sp.summary]||'';
     const extra=kind==='vehicles'?o.type:kind==='staff'?o.role:o.relation;
@@ -170,7 +171,7 @@
     if(cur==='review'){ buildReview(); $('dl-consent-row').hidden=!hasDriver(); }
   }
   function anyFilled(kind){ return [...$(kind).children].some(d=>isFilled(kind,blockData(d))); }
-  function hasDriver(){ return steps().includes('staff')&&[...$('staff').children].map(blockData).some(o=>isFilled('staff',o)&&o.role==='Driver'); }
+  function hasDriver(){ return steps().includes('staff')&&[...$('staff').children].map(blockData).some(o=>isFilled('staff',o)); }
   document.addEventListener('input',()=>{ if(['staff','vehicles'].includes(cur)) $('next').textContent=anyFilled(cur)?'Next':'Skip'; });
 
   let ERR=[];
@@ -195,7 +196,8 @@
         else if(f.t==='tel'&&o[f.k]&&!okMob(o[f.k])) m='This mobile number '+mobWhy(o[f.k]);
         else if(f.t==='email'&&o[f.k]&&!okEmail(o[f.k])) m='This email '+emailWhy(o[f.k]);
         else if(kind==='staff'&&f.k==='mobile'&&!o.mobile) m='Required for staff.';
-        else if(kind==='staff'&&f.k==='dlno'&&o.role==='Driver'&&!o.dlno) m='Licence number is compulsory for drivers.';
+        else if(kind==='staff'&&f.k==='idtype'&&o.role!=='Driver'&&!o.idtype) m='Please choose the ID type.';
+        else if(kind==='staff'&&f.k==='idfile'&&o.role!=='Driver'&&!o.idfile.length) m='A photo ID copy is compulsory for all staff.';
         else if(kind==='staff'&&f.k==='dlfile'&&o.role==='Driver'&&!o.dlfile.length) m='A copy of the driving licence is compulsory for drivers.';
         if(m){ fe.classList.add('bad'); fe.querySelector('.err').textContent=m; errs.push(m); ERR.push(SPEC[kind].label+' '+([...$(kind).children].indexOf(d)+1)+' · '+f.l+': '+m); }
       });
@@ -349,7 +351,7 @@
     if(d.mode==='owner') card('Occupancy','occ',[['Who lives here',occLabel[d.occupancy]],['Address',d.address]]);
     if(d.family.length) card('Family ('+d.family.length+')','family',d.family.map((p,i)=>[p.relation||('Member '+(i+1)),[p.name,p.age,p.mobile].filter(Boolean).join(' · ')]));
     if(d.ll) card((d.mode==='tenant'?'Others living with you':'Tenants')+' & licence','tenants',d.tenants.map((p,i)=>[p.relation||('Occupant '+(i+1)),[p.name,p.age,p.mobile].filter(Boolean).join(' · ')]).concat([['L&L period',d.ll.from+' to '+d.ll.to],['Registered',d.ll.registered],['Police verified',d.ll.police],['Documents',(d.files.ll.length+d.files.llpol.length)+' file(s)']]));
-    if(steps().includes('staff')) card('Staff ('+d.staff.length+')','staff',d.staff.length?d.staff.map(s=>[s.role||'Staff',[s.name,s.work,s.mobile,s.photo.length?'photo ✓':'no photo',s.role==='Driver'?(s.dlfile.length?'licence ✓':'licence missing'):'',s.police==='Yes'?'police verified':s.police==='No'?'not police verified':''].filter(Boolean).join(' · ')]):[['','None']]);
+    if(steps().includes('staff')) card('Staff ('+d.staff.length+')','staff',d.staff.length?d.staff.map(s=>[s.role||'Staff',[s.name,s.work,s.mobile,s.photo.length?'photo ✓':'no photo',s.role==='Driver'?(s.dlfile.length?'licence ✓':'licence missing'):(s.idfile.length?'ID ✓':'ID missing'),s.police==='Yes'?'police verified':s.police==='No'?'not police verified':''].filter(Boolean).join(' · ')]):[['','None']]);
     if(steps().includes('vehicles')) card('Vehicles ('+d.vehicles.length+')','vehicles',d.vehicles.length?d.vehicles.map(v=>[v.type||'Vehicle',[v.reg,v.model,v.slot].filter(Boolean).join(' · ')]):[['','None']]);
     card('Emergency contact','emergency',[['Name',d.emergency.name||'Not given'],['Relation',d.emergency.relation],['Mobile',d.emergency.mobile?'+91 '+d.emergency.mobile:''],['Address',d.emergency.address],['Remarks',d.remarks]]);
   }
@@ -373,12 +375,12 @@
   async function submit(){
     const err=$('submit-err'); err.hidden=true;
     if(!$('agree').checked){ err.textContent='Please tick the declaration to submit.'; err.hidden=false; toast('err','Declaration not ticked',['Tick the declaration box above the Submit button.']); $('agree').focus(); return; }
-    if(hasDriver()&&!$('dlconsent').checked){ err.textContent='Please confirm you have the driver\'s consent to share the licence copy.'; err.hidden=false; toast('err','Driver consent not ticked',[err.textContent]); return; }
+    if(hasDriver()&&!$('dlconsent').checked){ err.textContent='Please confirm you have your staff\'s consent to share their ID and licence copies.'; err.hidden=false; toast('err','Staff consent not ticked',[err.textContent]); return; }
     const btn=$('next'); btn.disabled=true; $('back').disabled=true; btn.textContent='Uploading…';
     try{
       const d=collect();
       d.files={id:await readAll(d.files.id), ll:await readAll(d.files.ll), llpol:await readAll(d.files.llpol)};
-      for(const s of d.staff){ s.photo=await readAll(s.photo); s.dlfile=s.role==='Driver'?await readAll(s.dlfile):[]; s.polfile=await readAll(s.polfile); if(s.role!=='Driver') s.dlno=''; }
+      for(const s of d.staff){ s.photo=await readAll(s.photo); s.dlfile=s.role==='Driver'?await readAll(s.dlfile):[]; s.idfile=s.role!=='Driver'?await readAll(s.idfile):[]; if(s.role==='Driver') s.idtype=''; s.polfile=await readAll(s.polfile); }
       let ref;
       if(LIVE){ const r=await call('submitKyc',[d]); ref=r.ref||r.data||''; }
       else ref='VCHS-KYC-'+d.flat.replace('-','')+'-'+(d.mode==='tenant'?'T':'M')+'-0001 (preview)';
