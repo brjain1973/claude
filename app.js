@@ -33,6 +33,7 @@
     'I will upload my ID later (within 7 days)':'मैं अपना पहचान पत्र बाद में (7 दिन में) अपलोड करूँगा/करूँगी',
     'Second name on the agreement — full name':'एग्रीमेंट में दूसरा नाम — पूरा नाम',"Joint member's mobile":'संयुक्त सदस्य का मोबाइल',"Joint member's email":'संयुक्त सदस्य का ईमेल',
     "Flat owner's name as in the agreement":'एग्रीमेंट अनुसार फ्लैट मालिक का नाम','Who lives in the flat now?':'अभी फ्लैट में कौन रहता है?',
+    "Everyone living in the flat under the leave & licence. The main tenant's name and mobile number are compulsory, so the Society can send them their own link to complete their KYC. Email is optional.":'लीव एंड लाइसेंस पर फ्लैट में रहने वाले सभी लोग। मुख्य किरायेदार का नाम और मोबाइल नंबर अनिवार्य है, ताकि सोसाइटी उन्हें KYC पूरा करने के लिए उनका अपना लिंक भेज सके। ईमेल वैकल्पिक है।',
     'My family and I':'मैं और मेरा परिवार','Other family members':'परिवार के अन्य सदस्य','A tenant':'किरायेदार','Nobody':'कोई नहीं',
     'Owner-occupied':'मालिक स्वयं रहते हैं',"My relatives live here; I don't":'मेरे रिश्तेदार रहते हैं; मैं नहीं','Given on leave & licence':'लीव एंड लाइसेंस पर दिया है','Vacant or locked':'खाली या बंद',
     'Your correspondence address':'आपका पत्राचार पता','Family members living in the flat':'फ्लैट में रहने वाले परिवार के सदस्य',
@@ -95,7 +96,7 @@
       {k:'age',t:'chips',l:'Age group',opts:AGE},{k:'mobile',t:'tel',l:'Mobile',opt:1},{k:'email',t:'email',l:'Email',opt:1}]},
     tenants:{label:'Occupant',preset:6,summary:'name',fields:[
       {k:'name',t:'text',l:'Full name',full:1,req:1},{k:'relation',t:'select',l:'Relation',opts:RELATION_T},
-      {k:'age',t:'chips',l:'Age group',opts:AGE},{k:'mobile',t:'tel',l:'Mobile',opt:1},{k:'email',t:'email',l:'Email',opt:1}]},
+      {k:'age',t:'chips',l:'Age group',opts:AGE},{k:'mobile',t:'tel',l:'Mobile'},{k:'email',t:'email',l:'Email',opt:1}]},
     staff:{label:'Staff',preset:3,summary:'name',defaults:[{role:'Driver'},{role:'Maid'},{role:'Helper'}],fields:[
       {k:'role',t:'chips',l:'Role',opts:['Driver','Maid','Helper','Cook','Nanny','Attendant','Other'],full:1},
       {k:'name',t:'text',l:'Full name',req:1},{k:'mobile',t:'tel',l:'Mobile'},
@@ -204,7 +205,7 @@
   function steps(){
     if(!KEY) return ['link'];
     const m=val('mode'), o=val('occ'), s=['start','you'];
-    if(m==='owner'){ s.push('occ'); if(o==='self'||o==='family') s.push('family'); if(o==='tenant') s.push('tenants'); if(o&&o!=='vacant') s.push('staff','vehicles'); }
+    if(m==='owner'){ s.push('occ'); if(o==='self'||o==='family') s.push('family'); if(o==='tenant') s.push('tenantinfo'); if(o==='self'||o==='family') s.push('staff','vehicles'); }
     else if(m==='tenant') s.push('tenants','staff','vehicles');
     s.push('emergency','review'); return s;
   }
@@ -218,7 +219,7 @@
     $('name-h').textContent=t?'Exactly as written in your registered leave & licence agreement.':tr('Full name of the person named first in your registered agreement, written exactly as in it.');
     $('ten-h').textContent=tr(t?'Others living with you':'Tenant details');
     $('fam-lead').textContent=val('occ')==='family'?'List the relatives living in the flat, with their relation to you. Tap a block to fill it; leave the rest empty.':'Include yourself. Tap a block to fill it; leave the rest empty.';
-    $('ten-lead').textContent=t?'Family or flatmates living with you. Leave empty if you live alone.':'Everyone living in the flat under the leave & licence. Tap a block to fill it.';
+    $('ten-lead').textContent=t?'Family or flatmates living with you. Leave empty if you live alone.':'Everyone living in the flat under the leave & licence.';
     $('decl-text').textContent=t
       ?'I confirm these details are correct, that I occupy the flat under a valid leave & licence agreement, that I am responsible for the verification and conduct of my staff, and that I will follow the society’s bye-laws.'
       :'I confirm these details are correct, that I am responsible for the verification and conduct of staff working in my flat, and that I will inform the society in writing of any change in ownership or occupancy.';
@@ -296,13 +297,19 @@
     if(step==='family') ok=checkBlocks('family','Please add at least one person living in the flat.');
     if(step==='tenants'){
       const owner=val('mode')==='owner', skip=owner&&$('llbytenant').checked;
-      ok=checkBlocks('tenants',owner?'Please add at least the main tenant.':null);
+      ok=checkBlocks('tenants',null);
       if(!skip){
         if(!$('llfrom').value) ok=bad('f-llfrom');
         if(!$('llto').value||($('llfrom').value&&$('llto').value<=$('llfrom').value)) ok=bad('f-llto');
         if(!val('llreg')) ok=bad('f-llreg');
         if(!val('llpol')) ok=bad('f-llpol');
       }
+    }
+    if(step==='tenantinfo'){
+      if($('tname').value.trim().length<3) ok=bad('f-tname');
+      const t=elPhone('tmob'); if(!okPhone(t)) ok=bad('f-tmob',t.d?'This mobile number '+phoneWhy(t):'Enter the tenant\'s mobile number. Their KYC link will be sent to it.');
+      else if(t.d===elPhone('mob').d) ok=bad('f-tmob','This is your own number. Please enter the tenant\'s mobile.');
+      const te=$('temail').value.trim(); if(te&&!okEmail(te)) ok=bad('f-temail','This email '+emailWhy(te));
     }
     if(step==='staff') ok=checkBlocks('staff');
     if(step==='vehicles') ok=checkBlocks('vehicles');
@@ -450,7 +457,7 @@
       joint:m==='owner'?{name:$('jname').value.trim(),mobile:fmtPhone(elPhone('jmob')),email:$('jemail').value.trim().toLowerCase()}:{name:'',mobile:'',email:''},
       ownerName:m==='tenant'?$('ownername').value.trim():'',
       occupancy:m==='owner'?val('occ'):'tenant', address:m==='owner'&&val('occ')!=='self'?$('addr').value.trim():'',
-      ll:ll, family:rows('family'), tenants:rows('tenants'), staff:rows('staff'), vehicles:rows('vehicles'),
+      ll:ll, family:rows('family'), tenants:list.includes('tenantinfo')?[{name:$('tname').value.trim(),relation:'Main tenant',age:'',mobile:fmtPhone(elPhone('tmob')),email:$('temail').value.trim().toLowerCase()}]:rows('tenants'), staff:rows('staff'), vehicles:rows('vehicles'),
       emergency:{name:$('ename').value.trim(),relation:$('erel').value,mobile:fmtPhone(elPhone('emob')),address:$('eaddr').value.trim()}, remarks:$('rem').value.trim(),
       dlConsent:$('dlconsent').checked,
       files:{id:REFS.idfile||[], ll:list.includes('tenants')?(REFS.llfile||[]):[], llpol:list.includes('tenants')?(REFS.llpolfile||[]):[]},
@@ -479,6 +486,7 @@
     card('Your details','you',[['Name',d.name],['Mobile',d.mobile],['Alternate',d.alt],['Email',d.email],['Photo ID',d.idLater?'To be uploaded later':d.idType+' · '+d.files.id.length+' file(s)'],['Joint member',d.joint.name],['Joint mobile',d.joint.mobile],['Joint email',d.joint.email],['Flat owner',d.ownerName]]);
     if(d.mode==='owner') card('Occupancy','occ',[['Who lives here',occLabel[d.occupancy]],['Address',d.address]]);
     if(d.family.length) card('Family ('+d.family.length+')','family',d.family.map((p,i)=>[p.relation||('Member '+(i+1)),[p.name,p.age,p.mobile].filter(Boolean).join(' · ')]));
+    if(steps().includes('tenantinfo')&&d.tenants[0]) card('Your tenant','tenantinfo',[['Name',d.tenants[0].name],['Mobile',d.tenants[0].mobile],['Email',d.tenants[0].email],['Next step','The Society will send the tenant their own KYC link']]);
     if(d.ll) card((d.mode==='tenant'?'Others living with you':'Tenants')+' & licence','tenants',d.tenants.map((p,i)=>[p.relation||('Occupant '+(i+1)),[p.name,p.age,p.mobile].filter(Boolean).join(' · ')]).concat(d.ll.byTenant?[['L&L details','Tenant will fill']]:[['L&L period',d.ll.from+' to '+d.ll.to],['Registered',d.ll.registered],['Police verified',d.ll.police],['Documents',(d.files.ll.length+d.files.llpol.length)+' file(s)']]));
     if(steps().includes('staff')) card('Staff ('+d.staff.length+')','staff',d.staff.length?d.staff.map(s=>[s.role||'Staff',[s.name,s.work,s.mobile,s.photo.length?'photo ✓':'no photo',s.role==='Driver'?(s.dlfile.length?'licence ✓':'licence later'):(s.idfile.length?'ID ✓':'ID later'),s.police==='Yes'?'police verified':s.police==='No'?'not police verified':''].filter(Boolean).join(' · ')]):[['','None']]);
     if(steps().includes('vehicles')) card('Vehicles ('+d.vehicles.length+')','vehicles',d.vehicles.length?d.vehicles.map(v=>[v.type||'Vehicle',[v.reg,v.model,v.slot].filter(Boolean).join(' · ')]):[['','None']]);

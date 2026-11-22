@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=5">
+<link rel="stylesheet" href="app.css?v=6">
 </head>
 <body>
 <div class="wrap">
@@ -186,6 +186,17 @@
     </div>
   </section>
 
+  <!-- 4c. Owner of a rented flat: tenant contact only -->
+  <section class="step" data-step="tenantinfo" data-name="Your tenant">
+    <h2>Your tenant's contact</h2>
+    <p class="lead">Only the main tenant's name, mobile and email are needed from you. The Society will send the tenant their own link to fill in the occupants, leave &amp; licence, staff and vehicle details. Your family's details are not needed for a rented flat.</p>
+    <div class="grid">
+      <div class="field full" id="f-tname"><label class="l" for="tname">Main tenant's full name</label><input type="text" id="tname" autocomplete="off"><span class="err">Enter the tenant's name.</span></div>
+      <div class="field" id="f-tmob"><label class="l" for="tmob">Tenant's mobile (WhatsApp)</label><div class="tel"><input type="tel" class="cc" id="tmobcc" value="+91" maxlength="5" aria-label="Country code"><input type="tel" id="tmob" inputmode="numeric" maxlength="14"></div><span class="hint">The tenant's KYC link will be sent to this number.</span><span class="err">Enter the tenant's mobile number.</span></div>
+      <div class="field" id="f-temail"><label class="l" for="temail">Tenant's email <span class="opt">optional</span></label><input type="email" id="temail" autocomplete="off"><span class="err">Check this email.</span></div>
+    </div>
+  </section>
+
   <!-- 5. Staff -->
   <section class="step" data-step="staff" data-name="Staff">
     <h2>Drivers, maids &amp; helpers</h2>
@@ -247,7 +258,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="config.js?v=6"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
