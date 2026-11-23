@@ -49,6 +49,10 @@
     'Police verification receipt':'पुलिस वेरिफिकेशन रसीद','for you as a tenant':'किरायेदार के रूप में आपकी',
     "Flat owner's name":'फ्लैट मालिक का नाम','as written in the agreement':'जैसा एग्रीमेंट में लिखा है',
     'People living with you':'आपके साथ रहने वाले लोग','names, age group, mobile and email':'नाम, आयु वर्ग, मोबाइल और ईमेल',
+    "Confirm it's you":'पुष्टि करें कि यह आप हैं',
+    'Registered mobile number':'रजिस्टर्ड मोबाइल नंबर',
+    'Attempts left: ':'बचे प्रयास: ',
+    'Continue with this number':'इसी नंबर से आगे बढ़ें',
     'My family and I':'मैं और मेरा परिवार','Other family members':'परिवार के अन्य सदस्य','A tenant':'किरायेदार','Nobody':'कोई नहीं',
     'Owner-occupied':'मालिक स्वयं रहते हैं',"My relatives live here; I don't":'मेरे रिश्तेदार रहते हैं; मैं नहीं','Given on leave & licence':'लीव एंड लाइसेंस पर दिया है','Vacant or locked':'खाली या बंद',
     'Your correspondence address':'आपका पत्राचार पता','Family members living in the flat':'फ्लैट में रहने वाले परिवार के सदस्य',
@@ -84,20 +88,23 @@
   $('lang-btn').onclick=()=>{ LANG=LANG==='hi'?'en':'hi'; store.set('vkyc_lang',LANG); applyLang(); applyMode(); paint(); };
 
   // ---------- server ----------
-  async function call(fn,args){
+  async function callRaw(fn,args){
     if(!LIVE) throw new Error('Preview mode: the Society server is not connected yet.');
     let r;
     try{ r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args||[]}),redirect:'follow'}); }
     catch(e){ throw new Error('No internet connection, or the Society server could not be reached. Your entries are saved on this phone; please try again.'); }
     if(!r.ok) throw new Error('The Society server did not respond ('+r.status+'). Your entries are saved on this phone; please try again.');
-    const j=await r.json();
+    return await r.json();
+  }
+  async function call(fn,args){
+    const j=await callRaw(fn,args);
     if(j&&j.ok===false) throw new Error(j.msg||'Request was not accepted.');
     return j;
   }
 
   // ---------- personal link ----------
   const qs=new URLSearchParams(location.search);
-  let KEY='';
+  let KEY='', TOKEN='', UNLOCKED=false, VERIFIED=true, PENDING_SAVED=null, ROLE='';
   function keyFrom(s){ s=String(s||'').trim(); const m=s.match(/[?&]k=([A-Za-z0-9]{8,40})/); if(m) return m[1]; return /^[A-Za-z0-9]{8,40}$/.test(s)?s:''; }
 
   // ---------- form spec ----------
@@ -219,6 +226,7 @@
 
   function steps(){
     if(!KEY) return ['link'];
+    if(!UNLOCKED) return ['check'];
     const m=val('mode'), o=val('occ'), s=['start','you'];
     if(m==='owner'){ s.push('occ'); if(o==='self'||o==='family') s.push('family'); if(o==='tenant') s.push('tenantinfo'); if(o==='self'||o==='family') s.push('staff','vehicles'); }
     else if(m==='tenant') s.push('tenants','staff','vehicles');
@@ -269,13 +277,14 @@
     const list=steps(), i=list.indexOf(cur);
     if(cur==='done'){ $('progress').hidden=true; $('nav').hidden=true; return; }
     $('nav').hidden=false; $('progress').hidden=cur==='link';
-    $('stepicon').textContent=({link:'🔗',start:'🏠',you:'🙋',occ:'🛋️',family:'👨‍👩‍👧',tenants:'🧳',tenantinfo:'🔑',staff:'🧹',vehicles:'🚗',emergency:'📞',review:'✅',done:'🎉'})[cur]||'';
+    $('stepicon').textContent=({link:'🔗',check:'🔒',start:'🏠',you:'🙋',occ:'🛋️',family:'👨‍👩‍👧',tenants:'🧳',tenantinfo:'🔑',staff:'🧹',vehicles:'🚗',emergency:'📞',review:'✅',done:'🎉'})[cur]||'';
     $('stepname').textContent=tr(document.querySelector('[data-step="'+cur+'"]').dataset.name);
     $('stepcount').textContent=(LANG==='hi'?'चरण ':'Step ')+(i+1)+(LANG==='hi'?' / ':' of ')+list.length;
     $('barfill').style.width=((i+1)/list.length*100)+'%';
+    if(cur==='check'||cur==='link'){ $('stepcount').textContent=''; $('barfill').style.width='4%'; }
     $('back').style.visibility=(i<=0||cur==='start')?'hidden':'visible';
-    $('save').hidden=cur==='link';
-    $('next').textContent=tr(cur==='link'?'Open my KYC':cur==='review'?'Submit KYC':(['staff','vehicles'].includes(cur)&&!anyFilled(cur))?'Skip':'Next');
+    $('save').hidden=(cur==='check'||cur==='link'||cur==='done');
+    $('next').textContent=tr(cur==='link'?'Open my KYC':cur==='check'?'Continue':cur==='review'?'Submit KYC':(['staff','vehicles'].includes(cur)&&!anyFilled(cur))?'Skip':'Next');
     if(cur==='review'){ buildReview(); $('dl-consent-row').hidden=!hasStaff(); }
   }
   function anyFilled(kind){ return [...$(kind).children].some(d=>isFilled(kind,blockData(d))); }
@@ -433,7 +442,7 @@
       const prev=(REFS[slot]||[]).map(r=>r.id), out=[];
       for(const f of files){
         const data=await readFile(f);
-        if(LIVE){ const r=await call('uploadFile',[KEY,slot,data,out.length?[]:prev]); out.push({id:r.id,name:data.name}); }
+        if(LIVE){ const r=await call('uploadFile',[TOKEN,slot,data,out.length?[]:prev]); out.push({id:r.id,name:data.name}); }
         else out.push({id:'preview-'+Date.now()+'-'+out.length,name:data.name});
       }
       REFS[slot]=out; fn.className='fn up'; fn.textContent='✓ '+out.map(r=>r.name).join(', ')+' uploaded';
@@ -475,13 +484,13 @@
   }
   let saveT=null;
   function saveDraftSoon(){ clearTimeout(saveT); saveT=setTimeout(saveDraft,800); }
-  function saveDraft(){ if(!KEY||cur==='done'||cur==='link') return; store.set('vkyc_draft_'+KEY,JSON.stringify(snapshot())); }
+  function saveDraft(){ if(!KEY||!UNLOCKED||cur==='done'||cur==='link'||cur==='check') return; store.set('vkyc_draft_'+KEY,JSON.stringify(snapshot())); }
   async function saveToSociety(){
     saveDraft();
     const btn=$('save'); btn.disabled=true;
     try{
-      if(LIVE) await call('saveDraft',[KEY,snapshot()]);
-      toast('ok','Saved',['Your entries are saved. You can close this and finish later from the same link.'+(LIVE?'':' (Preview: saved on this phone only.)')],5000);
+      const r=LIVE?await call('saveDraft',[TOKEN,snapshot()]):{localOnly:true};
+      toast('ok','Saved',[r.localOnly?'Your entries are saved on this phone. Open the same link on this phone to finish later.':'Your entries are saved. You can close this and finish later from the same link.'],5000);
     }catch(e){ toast('warn','Saved on this phone only',[e.message],0); }
     finally{ btn.disabled=false; }
   }
@@ -492,7 +501,7 @@
     const rows=k=>list.includes(k)?[...$(k).children].map(d=>{ const o=blockData(d); if(o.mobile) o.mobile=fmtPhone(phone(ccOf($(k+d.dataset.n+'_mobile')),o.mobile)); return o; }).filter(o=>isFilled(k,o)):[];
     const ll=list.includes('tenants')?{byTenant:m==='owner'&&$('llbytenant').checked,from:$('llfrom').value,to:$('llto').value,registered:val('llreg'),police:val('llpol')}:null;
     return {
-      key:KEY, mode:m, flat:'B-'+$('flat').value,
+      key:KEY, token:TOKEN, mode:m, flat:'B-'+$('flat').value,
       name:$('name').value.trim(), mobile:fmtPhone(elPhone('mob')), alt:fmtPhone(elPhone('alt')), email:$('email').value.trim().toLowerCase(),
       idType:$('idtype').value, idLater:$('idlater').checked,
       joint:m==='owner'?{name:$('jname').value.trim(),mobile:fmtPhone(elPhone('jmob')),email:$('jemail').value.trim().toLowerCase()}:{name:'',mobile:'',email:''},
@@ -547,33 +556,62 @@
       else r={ref:'VCHS-KYC-'+d.flat.replace('-','')+'-'+(d.mode==='tenant'?'T':'M')+' (preview)',updated:false};
       store.del('vkyc_draft_'+KEY);
       $('ref').textContent=r.ref;
-      $('done-note').textContent=(r.updated?'Your earlier entry for this flat has been replaced with these details. ':'')+(d.pending.length?'Pending documents: '+d.pending.join(', ')+'. Please open the same link within 7 days to upload them. ':'')+(r.note||'The office will check these details against the register.');
+      $('done-note').textContent=(r.pendingVerification?'':(r.updated?'Your earlier entry for this flat has been replaced with these details. ':'')+'')+(d.pending.length&&!r.pendingVerification?'Pending documents: '+d.pending.join(', ')+'. Please open the same link within 7 days to upload them. ':'')+(r.note||'The office will check these details against the register.');
       cur='done'; paint(); scrollTo(0,0);
     }catch(e){ err.textContent='Could not submit: '+e.message; err.hidden=false; toast('err','Submission failed',[e.message],0); btn.disabled=false; $('back').disabled=false; btn.textContent=tr('Submit KYC'); }
   }
 
   // ---------- link handling ----------
   async function openKey(k){
-    let saved=null, flat='', role='';
+    let flat='', role='', hint='';
     if(LIVE){
-      const r=await call('verifyKey',[k]); flat=String(r.flat||'').replace(/\D/g,''); role=r.role||''; saved=r.saved||null;
+      const r=await call('verifyKey',[k]); flat=String(r.flat||'').replace(/\D/g,''); role=r.role||''; hint=r.hint||'';
     } else {
       // Preview links: TEST<flat> opens as the owner, TEST<flat>T as the tenant.
       const m=k.match(/^TEST(\d{3,4})(T?)/i); flat=m?m[1]:''; role=m?(m[2]?'tenant':'owner'):'';
     }
-    KEY=k;
+    KEY=k; ROLE=role; UNLOCKED=false; TOKEN='';
     $('flat').value=flat; $('flat').readOnly=!!flat;
     if(role){ const el=document.querySelector('input[name=mode][value='+role+']'); el.checked=true; document.querySelectorAll('input[name=mode]').forEach(x=>{ x.closest('.card').hidden=x!==el; }); }
     applyMode();
-    let ld=null; try{ const local=store.get('vkyc_draft_'+k); ld=local?JSON.parse(local):null; }catch(e){}
+    const hi=LANG==='hi';
+    $('check-lead').textContent=hi?('आपकी सुरक्षा के लिए, फ्लैट B-'+flat+' के लिए सोसाइटी में रजिस्टर्ड मोबाइल नंबर डालें'+(role==='tenant'?' (वह नंबर जो फ्लैट मालिक ने आपके लिए दिया है)।':'।'))
+      :('For your security, enter the mobile number registered with the Society for Flat B-'+flat+(role==='tenant'?' (the number the flat owner gave the Society for you).':'.'));
+    $('vmob-hint').textContent=hint?(hi?'सोसाइटी के पास इस फ्लैट के लिए '+hint.replace(/ending /g,'अंत में ').replace(/ or /g,' या ')+' वाला नंबर है।':'The Society has a number '+hint+' for this flat.'):'';
+    store.set('vkyc_key',k);
+    return 'check';
+  }
+  /** After the mobile check: load what is allowed and go to the right step. */
+  function afterUnlock(r, cc, num){
+    TOKEN=r.token||''; VERIFIED=r.verified!==false; UNLOCKED=true;
+    const saved=VERIFIED?(r.saved||null):null;
+    let ld=null; try{ const local=store.get('vkyc_draft_'+KEY); ld=local?JSON.parse(local):null; }catch(e){}
     const sd=saved&&saved.draft;
     const pick=(ld&&(!sd||ld.at>sd.at))?ld:(sd||null);
-    if(pick){ restore(pick); if(role){ document.querySelector('input[name=mode][value='+role+']').checked=true; applyMode(); } }
-    if(saved&&saved.status==='SUBMITTED'){ $('saved-banner').textContent='This flat\'s KYC was submitted on '+saved.at+'. You can update it or upload pending documents; your new entry will replace the earlier one.'; $('saved-banner').hidden=false; }
+    if(pick){ restore(pick); if(ROLE){ document.querySelector('input[name=mode][value='+ROLE+']').checked=true; applyMode(); } }
+    if(!$('mob').value){ $('mob').value=num; $('mobcc').value=cc; }
+    if(!VERIFIED){ $('saved-banner').textContent=tr('Your number is not on the Society\'s record for this flat. You can fill the form; the office will verify with the flat owner before updating the records.'); $('saved-banner').className='banner warnbanner'; $('saved-banner').hidden=false; }
+    else if(saved&&saved.status==='SUBMITTED'){ $('saved-banner').textContent='This flat\'s KYC was submitted on '+saved.at+'. You can update it or upload pending documents; your new entry will replace the earlier one.'; $('saved-banner').hidden=false; }
     else if(pick){ $('saved-banner').textContent='Your saved entries have been loaded. Continue where you left off.'; $('saved-banner').hidden=false; }
-    store.set('vkyc_key',k);
-    return pick&&pick.cur&&pick.cur!=='done'&&pick.cur!=='link'?pick.cur:'start';
+    const c=pick&&pick.cur&&!['done','link','check'].includes(pick.cur)?pick.cur:'start';
+    return steps().includes(c)?c:'start';
   }
+  async function doUnlock(proceed){
+    const p=elPhone('vmob'); ERR=[];
+    if(!okPhone(p)){ bad('f-vmob',p.d?'This mobile number '+phoneWhy(p):'Enter your mobile number.'); toast('err','Check the mobile number',ERR); return; }
+    const btn=$('next'), ub=$('unverified-btn'); btn.disabled=true; ub.disabled=true; $('check-err').hidden=true;
+    try{
+      const r=LIVE?await callRaw('unlock',[KEY,fmtPhone(p),!!proceed]):{ok:true,token:'',verified:!/^0/.test(p.d)};
+      if(r.ok){ $('check-alt').hidden=true; cur=afterUnlock(r,ccOf($('vmob')),$('vmob').value); paint(); scrollTo(0,0); return; }
+      $('check-err').textContent=r.msg+(r.attemptsLeft?' '+tr('Attempts left: ')+r.attemptsLeft+'.':'');
+      $('check-err').hidden=false;
+      $('check-alt').hidden=!r.mismatch;
+      if(r.locked||r.expired){ $('vmob').disabled=true; btn.disabled=true; return; }
+    }catch(e){ toast('err','Could not check the number',[e.message],0); }
+    finally{ if(!$('vmob').disabled) btn.disabled=false; ub.disabled=false; }
+  }
+  $('unverified-btn').onclick=()=>doUnlock(true);
+
 
   $('next').onclick=async ()=>{
     if(cur==='link'){
@@ -585,6 +623,7 @@
       finally{ btn.disabled=false; }
       return;
     }
+    if(cur==='check') return doUnlock(false);
     if(cur==='review') return submit();
     if(!validate(cur)) return;
     const w=warnings(cur), sig=cur+'|'+w.join('|');

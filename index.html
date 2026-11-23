@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=8">
+<link rel="stylesheet" href="app.css?v=9">
 </head>
 <body>
 <div class="wrap">
@@ -51,6 +51,24 @@
       <span class="err">That code is not valid. Please check the WhatsApp message from the Society.</span>
     </div>
     <p class="note">For help, contact Rahul, Property Manager, at the Society office.</p>
+  </section>
+
+  <!-- 0b. Mobile check -->
+  <section class="step" data-step="check" data-name="Confirm it's you">
+    <h2>Confirm it's you</h2>
+    <p class="lead" id="check-lead">For your security, enter the mobile number registered with the Society for this flat.</p>
+    <div class="field" id="f-vmob">
+      <label class="l" for="vmob">Registered mobile number</label>
+      <div class="tel"><input type="tel" class="cc" id="vmobcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="vmob" inputmode="numeric" maxlength="14" autocomplete="tel-national" placeholder="98XXXXXXXX"></div>
+      <span class="hint" id="vmob-hint"></span>
+      <span class="err">Enter your mobile number.</span>
+    </div>
+    <div class="alert" id="check-err" hidden></div>
+    <div class="handy" id="check-alt" hidden>
+      <p style="margin:0 0 10px"><b>Number changed, or living abroad?</b><br><small>You can still fill the form. Your entry will be held for verification, and the office will confirm with the flat owner before updating the Society's records. Earlier saved details will not be shown.</small></p>
+      <button type="button" class="btn" id="unverified-btn">Continue with this number</button>
+    </div>
+    <p class="note">This keeps your family's details private if this link reaches anyone else. For help: Rahul, Property Manager, 86898 50635.</p>
   </section>
 
   <!-- 1. Start -->
@@ -259,7 +277,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=8"></script>
-<script src="app.js?v=8"></script>
+<script src="config.js?v=9"></script>
+<script src="app.js?v=9"></script>
 </body>
 </html>
