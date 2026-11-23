@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Venezia KYC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="app.css?v=9">
+<link rel="stylesheet" href="app.css?v=10">
 </head>
 <body>
 <div class="wrap">
@@ -232,6 +232,12 @@
     <div class="alert" id="vehicles-err" hidden></div>
     <div class="cards" id="vehicles"></div>
     <button type="button" class="add" data-add="vehicles">+ Add another vehicle</button>
+    <h2 style="font-size:17px;margin-top:6px">Parking slots allotted to your flat <span class="opt">optional</span></h2>
+    <p class="lead" style="margin-top:-10px">Fill this even if you have no vehicle.</p>
+    <div class="grid">
+      <div class="field" id="f-pk1"><span class="l">Slot 1</span><div class="tel"><select id="pk1lvl" class="lvl"><option value="">Level</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select><input type="text" id="pk1no" maxlength="6" placeholder="Slot no. e.g. 198A"></div><span class="err">Choose the level and enter the slot number.</span></div>
+      <div class="field" id="f-pk2"><span class="l">Slot 2</span><div class="tel"><select id="pk2lvl" class="lvl"><option value="">Level</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select><input type="text" id="pk2no" maxlength="6" placeholder="Slot no. e.g. 198B"></div><span class="err">Choose the level and enter the slot number.</span></div>
+    </div>
   </section>
 
   <!-- 7. Emergency -->
@@ -239,7 +245,7 @@
     <h2>Emergency contact</h2>
     <p class="lead">Someone we can call if we can't reach you.</p>
     <div class="grid">
-      <div class="field"><label class="l" for="ename">Name</label><input type="text" id="ename"></div>
+      <div class="field" id="f-ename"><label class="l" for="ename">Name</label><input type="text" id="ename"><span class="err">Please enter the name.</span></div>
       <div class="field"><label class="l" for="erel">Relation to you</label><select id="erel"><option value="">Select</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Father</option><option>Mother</option><option>Brother</option><option>Sister</option><option>Son-in-law</option><option>Daughter-in-law</option><option>Other relative</option><option>Friend</option><option>Neighbour</option><option>Colleague</option></select></div>
       <div class="field" id="f-emob"><label class="l" for="emob">Mobile</label><div class="tel"><input type="tel" class="cc" id="emobcc" value="+91" maxlength="5" inputmode="tel" aria-label="Country code"><input type="tel" id="emob" inputmode="numeric" maxlength="14"></div><span class="err">Enter a valid mobile number or leave blank.</span></div>
       <div class="field full"><label class="l" for="eaddr">Address</label><textarea id="eaddr" rows="2" placeholder="House / flat, building, area, city, PIN"></textarea></div>
@@ -277,7 +283,7 @@
   <button type="button" class="btn primary" id="next">Next</button>
 </div></div>
 
-<script src="config.js?v=9"></script>
-<script src="app.js?v=9"></script>
+<script src="config.js?v=10"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>

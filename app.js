@@ -133,7 +133,7 @@
     vehicles:{label:'Vehicle',preset:4,summary:'reg',defaults:[{type:'2-wheeler'},{type:'2-wheeler'},{type:'4-wheeler'},{type:'4-wheeler'}],fields:[
       {k:'type',t:'chips',l:'Type',opts:['2-wheeler','2-wheeler EV','4-wheeler','4-wheeler EV'],full:1},
       {k:'reg',t:'text',l:'Registration no.',ph:'MH01AB1234',upper:1,req:1},
-      {k:'model',t:'text',l:'Make & model',ph:'e.g. Honda Activa',opt:1},{k:'slot',t:'text',l:'Parking slot no. (P1–P4)',opt:1}]}
+      {k:'model',t:'text',l:'Make & model',ph:'e.g. Honda Activa',opt:1},{k:'slot',t:'text',l:'Parked at slot',ph:'e.g. P2-90',opt:1}]}
   };
   const counters={family:0,tenants:0,staff:0,vehicles:0};
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -183,6 +183,17 @@
       else o[k]=el.value.trim();
     });
     return o;
+  }
+  /** Put the member in the family list as "Self" so no one has to type themselves in again. */
+  function addSelfRow(){
+    const blocks=[...$('family').children]; if(blocks.some(d=>blockData(d).relation==='Self')) return;
+    const d=blocks.find(x=>!isFilled('family',blockData(x))); if(!d) return; const n=d.dataset.n;
+    const set=(k,v)=>{ const el=$('family'+n+'_'+k); if(el&&v) el.value=v; };
+    set('name',$('name').value.trim()); set('mobile',$('mob').value.trim()); set('email',$('email').value.trim());
+    const cc=$('family'+n+'_mobilecc'); if(cc) cc.value=$('mobcc').value;
+    const sel=$('family'+n+'_relation'); if(sel) sel.value='Self';
+    const ad=d.querySelector('input[name="family'+n+'_age"][value="Adult"]'); if(ad) ad.checked=true;
+    refreshBlock(d);
   }
   function isFilled(kind,o){ return SPEC[kind].fields.some(f=>['text','tel','email'].includes(f.t)&&o[f.k]); }
   function refreshBlock(d){
@@ -362,8 +373,12 @@
       const te=$('temail').value.trim(); if(te&&!okEmail(te)) ok=bad('f-temail','This email '+emailWhy(te));
     }
     if(step==='staff') ok=checkBlocks('staff');
-    if(step==='vehicles') ok=checkBlocks('vehicles');
-    if(step==='emergency'){ const e=elPhone('emob'); if(e.d&&!okPhone(e)) ok=bad('f-emob','This mobile number '+phoneWhy(e)); }
+    if(step==='vehicles'){
+      ok=checkBlocks('vehicles');
+      [...$('vehicles').children].forEach(d=>{ const o=blockData(d); if(o.reg&&!/^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{1,4}$|^\d{2}BH\d{4}[A-Z]{1,2}$/.test(o.reg)){ const fe=d.querySelector('[data-fk="reg"]'); fe.classList.add('bad'); fe.querySelector('.err').textContent='Enter the registration number as on the RC, e.g. MH01AB1234. If you have no vehicle, clear this block.'; d.open=true; ERR.push('Vehicle '+o.reg+': not a valid registration number.'); ok=false; } });
+      ['1','2'].forEach(n=>{ const l=$('pk'+n+'lvl').value, v=$('pk'+n+'no').value.trim(); if((l&&!v)||(!l&&v)) ok=bad('f-pk'+n); });
+    }
+    if(step==='emergency'){ const e=elPhone('emob'); if(e.d&&!okPhone(e)) ok=bad('f-emob','This mobile number '+phoneWhy(e)); if(e.d&&!$('ename').value.trim()) ok=bad('f-ename','Please enter the emergency contact\'s name.'); }
     if(!ok){
       const f=document.querySelector('section[data-step="'+step+'"] .field.bad'); if(f) f.scrollIntoView({behavior:'smooth',block:'center'});
       toast('err',ERR.length===1?'1 thing to fix before you continue':ERR.length+' things to fix before you continue',ERR);
@@ -406,13 +421,13 @@
       dupes(rows('staff').map(o=>digits(o.mobile))).forEach(m=>w.push('Mobile '+m+' is entered for more than one staff member.'));
     }
     if(step==='vehicles'){
-      rows('vehicles').forEach(o=>{ if(o.reg&&!/^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{1,4}$|^\d{2}BH\d{4}[A-Z]{1,2}$/.test(o.reg)) w.push(o.reg+' does not look like a valid registration number (e.g. MH01AB1234).'); });
       dupes(rows('vehicles').map(o=>o.reg)).forEach(v=>w.push(v+' is entered twice.'));
     }
     if(step==='emergency'){
       if($('ename').value.trim()&&!$('erel').value) w.push('Please select how the emergency contact is related to you.');
       if(!$('ename').value.trim()&&!$('emob').value) w.push('No emergency contact given. We strongly recommend adding one.');
       else if($('emob').value&&elPhone('emob').d===elPhone('mob').d) w.push('Emergency contact mobile is the same as yours. Please give someone else\'s number.');
+      else if($('emob').value){ const em=elPhone('emob').d, inFlat=[elPhone('alt').d].concat([...$('family').children,...$('tenants').children].map(d=>digits(blockData(d).mobile||'')).map(x=>x.slice(-10))).filter(Boolean); if(steps().some(x=>x==='family'||x==='tenants')&&inFlat.includes(em)) w.push('The emergency contact lives in the flat with you. It is better to give someone who does not live here, so the Society can reach them if no one at home answers.'); }
     }
     return w;
   }
@@ -507,7 +522,7 @@
       joint:m==='owner'?{name:$('jname').value.trim(),mobile:fmtPhone(elPhone('jmob')),email:$('jemail').value.trim().toLowerCase()}:{name:'',mobile:'',email:''},
       ownerName:m==='tenant'?$('ownername').value.trim():'',
       occupancy:m==='owner'?val('occ'):'tenant', address:m==='owner'&&val('occ')!=='self'?$('addr').value.trim():'',
-      ll:ll, family:rows('family'), tenants:list.includes('tenantinfo')?[{name:$('tname').value.trim(),relation:'Main tenant',age:'',mobile:fmtPhone(elPhone('tmob')),email:$('temail').value.trim().toLowerCase()}]:rows('tenants'), staff:rows('staff'), vehicles:rows('vehicles'),
+      ll:ll, family:rows('family'), tenants:list.includes('tenantinfo')?[{name:$('tname').value.trim(),relation:'Main tenant',age:'',mobile:fmtPhone(elPhone('tmob')),email:$('temail').value.trim().toLowerCase()}]:rows('tenants'), staff:rows('staff'), vehicles:rows('vehicles'), parking:['1','2'].map(n=>$('pk'+n+'lvl').value&&$('pk'+n+'no').value.trim()?$('pk'+n+'lvl').value+'-'+$('pk'+n+'no').value.trim().toUpperCase():'').filter(Boolean),
       emergency:{name:$('ename').value.trim(),relation:$('erel').value,mobile:fmtPhone(elPhone('emob')),address:$('eaddr').value.trim()}, remarks:$('rem').value.trim(),
       dlConsent:$('dlconsent').checked,
       files:{id:REFS.idfile||[], ll:list.includes('tenants')?(REFS.llfile||[]):[], llpol:list.includes('tenants')?(REFS.llpolfile||[]):[]},
@@ -539,7 +554,7 @@
     if(steps().includes('tenantinfo')&&d.tenants[0]) card('Your tenant','tenantinfo',[['Name',d.tenants[0].name],['Mobile',d.tenants[0].mobile],['Email',d.tenants[0].email],['Next step','The Society will send the tenant their own KYC link']]);
     if(d.ll) card((d.mode==='tenant'?'Others living with you':'Tenants')+' & licence','tenants',d.tenants.map((p,i)=>[p.relation||('Occupant '+(i+1)),[p.name,p.age,p.mobile].filter(Boolean).join(' · ')]).concat(d.ll.byTenant?[['L&L details','Tenant will fill']]:[['L&L period',d.ll.from+' to '+d.ll.to],['Registered',d.ll.registered],['Police verified',d.ll.police],['Documents',(d.files.ll.length+d.files.llpol.length)+' file(s)']]));
     if(steps().includes('staff')) card('Staff ('+d.staff.length+')','staff',d.staff.length?d.staff.map(s=>[s.role||'Staff',[s.name,s.work,s.mobile,s.photo.length?'photo ✓':'no photo',s.role==='Driver'?(s.dlfile.length?'licence ✓':'licence later'):(s.idfile.length?'ID ✓':'ID later'),s.police==='Yes'?'police verified':s.police==='No'?'not police verified':''].filter(Boolean).join(' · ')]):[['','None']]);
-    if(steps().includes('vehicles')) card('Vehicles ('+d.vehicles.length+')','vehicles',d.vehicles.length?d.vehicles.map(v=>[v.type||'Vehicle',[v.reg,v.model,v.slot].filter(Boolean).join(' · ')]):[['','None']]);
+    if(steps().includes('vehicles')) card('Vehicles ('+d.vehicles.length+')','vehicles',(d.vehicles.length?d.vehicles.map(v=>[v.type||'Vehicle',[v.reg,v.model,v.slot].filter(Boolean).join(' · ')]):[['','None']]).concat(d.parking.length?[['Parking slots',d.parking.join(', ')]]:[]));
     card('Emergency contact','emergency',[['Name',d.emergency.name||'Not given'],['Relation',d.emergency.relation],['Mobile',d.emergency.mobile],['Address',d.emergency.address],['Remarks',d.remarks]]);
     const p=pendingDocs(d); if(p.length) card('Documents still to upload','you',p.map(x=>['Pending',x]));
   }
@@ -629,7 +644,9 @@
     const w=warnings(cur), sig=cur+'|'+w.join('|');
     if(w.length&&warnedSig!==sig){ warnedSig=sig; toast('warn','Please check before continuing',w,0); $('next').textContent=tr('Continue anyway'); return; }
     warnedSig=''; $('toasts').innerHTML='';
-    const l=steps(); cur=l[l.indexOf(cur)+1]; saveDraft(); paint(); scrollTo(0,0);
+    const l=steps(); cur=l[l.indexOf(cur)+1];
+    if(cur==='family'&&val('occ')==='self') addSelfRow();
+    saveDraft(); paint(); scrollTo(0,0);
   };
   $('back').onclick=()=>{ warnedSig=''; $('toasts').innerHTML=''; const l=steps(), i=l.indexOf(cur); if(i>0){ cur=l[i-1]; saveDraft(); paint(); scrollTo(0,0); } };
   window.addEventListener('pagehide',saveDraft);

@@ -208,3 +208,4 @@ details.block[open]{box-shadow:var(--shadow);border-color:transparent}
 .handy .tip{margin:12px 0 0;font-size:13px;color:var(--muted)}
 footer{padding:8px 0 16px}
 .hero .brand{padding-right:64px}
+.tel .lvl{max-width:88px;border-radius:12px 0 0 12px;border-right:0;background:var(--accent-soft);color:var(--accent);padding:11px 6px}
