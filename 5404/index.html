@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Venezia CHS – Flat B-5404 KYC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#17616f">
+<link rel="icon" type="image/png" href="../icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+<style>
+:root{--bg:#f4f6f6;--card:#fff;--fg:#1b2628;--muted:#5d6b6e;--line:#dfe6e7;--accent:#17616f;--accent-2:#0f4a56;--soft:#e4f1f2;--gold:#c8963e;--gold-soft:#fbf3e3;--err:#b3261e;
+--f-body:'Plus Jakarta Sans',system-ui,sans-serif;--f-display:'Fraunces',Georgia,serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding:0 12px 40px}
+.hero{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-radius:0 0 18px 18px;padding:16px 18px 18px;margin:0 -12px 14px}
+.hero .reg{font-size:10.5px;letter-spacing:.1em;font-weight:600;opacity:.8}
+.hero h1{font-family:var(--f-display);font-size:22px;margin:4px 0 6px}
+.hero p{margin:0;font-size:13px;opacity:.9}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-family:var(--f-display);font-size:17px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 .n{background:var(--soft);color:var(--accent);border-radius:99px;font:600 12px var(--f-body);padding:2px 9px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.full{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:3px}
+label b{color:var(--err)}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;background:#fff;color:var(--fg)}
+textarea{min-height:56px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--soft);border-color:var(--accent)}
+.bad{border-color:var(--err)!important}
+.person{border:1px dashed var(--line);border-radius:12px;padding:10px;margin-bottom:10px;position:relative}
+.person .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;color:var(--accent)}
+.rm{background:none;border:0;color:var(--err);font:600 12px var(--f-body);cursor:pointer}
+.add{width:100%;border:1.5px dashed var(--accent);background:var(--soft);color:var(--accent);border-radius:12px;padding:10px;font:700 14px var(--f-body);cursor:pointer}
+.add[disabled]{opacity:.4}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:6px 11px;margin:0;color:var(--fg);font-weight:500;font-size:13px;cursor:pointer}
+.seg input{width:auto;margin:0}
+.hide{display:none}
+.note{background:var(--gold-soft);border-radius:12px;padding:10px 12px;font-size:12.5px}
+.disc{font-size:12px;color:var(--muted);max-height:180px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fafbfb}
+.disc ol{margin:0;padding-left:18px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--fg);font-weight:500;margin:8px 0}
+.chk input{width:auto;margin-top:3px}
+.btn{width:100%;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:13px;font:700 16px var(--f-body);cursor:pointer}
+.btn[disabled]{opacity:.5}
+.msg{color:var(--err);font-size:13px;margin:8px 0;min-height:1em}
+.done{text-align:center;padding:30px 16px}
+.done h2{font-family:var(--f-display);color:var(--accent)}
+@media(max-width:420px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="hero">
+    <div class="reg">VENEZIA CO-OP HOUSING SOCIETY LTD · REGD. NO. MUM/SRA/HSG/(T.C.)/13171/2019</div>
+    <h1>Flat B-5404 – KYC &amp; Disclosure</h1>
+    <p>To be filled by the registered owner, with the details of every person residing in the flat. Takes about 10 minutes.</p>
+  </header>
+
+  <div class="note card">Keep ready: ID of each owner and occupant (PAN / masked Aadhaar / passport – only the <b>last 4 characters</b> are asked), addresses, and the Leave &amp; Licence agreement and police verification if any. Do not enter full Aadhaar or any account numbers.</div>
+
+  <form id="f" novalidate>
+  <section class="card">
+    <h2>Registered owner(s) <span class="n" id="oc">1</span></h2>
+    <div id="owners"></div>
+    <button type="button" class="add" id="addOwner">+ Add joint owner</button>
+    <div style="margin-top:10px"><label>Share certificate no. (if known)</label><input name="share"></div>
+  </section>
+
+  <section class="card">
+    <h2>Persons residing in the flat <span class="n" id="pc">1</span></h2>
+    <div id="occs"></div>
+    <button type="button" class="add" id="addOcc">+ Add another person</button>
+  </section>
+
+  <section class="card">
+    <h2>Occupation &amp; loan</h2>
+    <div class="grid">
+      <div class="full"><label>Basis on which the occupants reside <b>*</b></label>
+        <select name="basis" required><option value="">Select…</option><option>Family of the owner – no rent or consideration</option><option>Leave &amp; Licence (tenancy)</option><option>Other</option></select></div>
+      <div class="full hide" id="llBox"><label>Agreement no., period, police verification</label><input name="ll"></div>
+      <div><label>Any rent / fee / deposit / EMI contribution paid by occupants? <b>*</b></label>
+        <select name="consid" required><option value="">Select…</option><option>No</option><option>Yes</option></select></div>
+      <div class="hide" id="cdBox"><label>Details</label><input name="consid_d"></div>
+      <div><label>Occupied by others since</label><input name="since_others" placeholder="month / year"></div>
+      <div><label>Person responsible for Society dues <b>*</b></label><input name="dues_by" required></div>
+      <div class="full"><label>Anyone other than the owner claiming a right over the flat <b>*</b></label><input name="claim" required placeholder='Write "None" if none'></div>
+      <div><label>Vehicles (reg. no. / parking slot)</label><input name="veh"></div>
+      <div><label>Domestic staff / drivers (name, mobile)</label><input name="staff"></div>
+      <div class="full"><label>Is the flat mortgaged to any bank / institution? <b>*</b></label>
+        <select name="mort" required><option value="">Select…</option><option>No</option><option>Yes</option><option>Loan fully repaid (charge to be released)</option></select></div>
+      <div class="hide loan"><label>Bank and branch</label><input name="bank"></div>
+      <div class="hide loan"><label>Borrower(s)</label><input name="borrowers"></div>
+      <div class="hide loan"><label>Year of loan</label><input name="lyear" inputmode="numeric"></div>
+      <div class="hide loan"><label>Society NOC taken for mortgage?</label><select name="lnoc"><option value="">Select…</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
+      <div class="full hide loan"><label>If repaid: closure date / bank NOC available?</label><input name="lclose"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Disclaimer &amp; declaration</h2>
+    <div class="disc"><b>Disclaimer on behalf of the Managing Committee</b><ol>
+      <li>This information is called for by the Managing Committee for the Society's records of occupation and the safety and security of the building, under the Society's bye-laws, and will be used for no other purpose.</li>
+      <li>Collecting or receiving it does not recognise, approve or regularise any occupation, tenancy, licence, transfer, mortgage or other arrangement, and confers no right, title, interest or membership on anyone. Membership is governed only by the MCS Act, 1960, the Rules and the bye-laws.</li>
+      <li>This exercise is without prejudice to the rights and contentions of the Society, including on outstanding dues and any pending or future proceedings, and is not a waiver or an admission.</li>
+      <li>The owner is solely responsible for the correctness of the information. The Society relies on it in good faith; neither the Society nor the Managing Committee or its members is responsible for consequences of incorrect information.</li>
+      <li>The Society may verify the information by inspection or by calling for documents.</li>
+      <li>Loan details are recorded only to note a charge on the flat; the Society does not verify or endorse any loan.</li>
+      <li>The information is confidential, seen only by the Managing Committee and authorised office staff, kept only as long as needed or required by law, and disclosed only where required by law or a competent authority, including the police.</li>
+    </ol></div>
+    <label class="chk"><input type="checkbox" name="ack" required> I/We have read and understood the above disclaimer.</label>
+    <label class="chk"><input type="checkbox" name="decl" required> I/We declare that the above particulars are true and complete; the persons named are the only persons residing in Flat B-5404; I/we will inform the Society in writing within 7 days of any change; any leave and licence will comply with the bye-laws; and I/we remain responsible to the Society for all dues and the conduct of the occupants.</label>
+    <label class="chk"><input type="checkbox" name="consent" required> Each adult occupant named has seen and confirmed his/her particulars and consents to the Society holding them for its records and security. Details of minors are given by their parent / guardian.</label>
+    <div class="grid">
+      <div><label>Submitted by (name) <b>*</b></label><input name="by" required></div>
+      <div><label>Capacity <b>*</b></label><select name="cap" required><option value="">Select…</option><option>Registered owner</option><option>Joint owner</option><option>Family member authorised by owner</option></select></div>
+    </div>
+    <div class="msg" id="msg"></div>
+    <button class="btn" id="go" type="submit">Submit</button>
+    <p style="font-size:12px;color:var(--muted);margin:10px 0 0">After submitting, hand over self-attested copies (masked Aadhaar / ID, address proof, proof of relationship, one photo of each occupant, vehicle RC) at the Society office or email mgmtcom.veneziab@gmail.com.</p>
+  </section>
+  </form>
+</div>
+
+<template id="tOwner"><div class="person"><div class="hd"><span class="t"></span><button type="button" class="rm">Remove</button></div><div class="grid">
+  <div class="full"><label>Full name (as per agreement) <b>*</b></label><input data-k="name" required></div>
+  <div class="rel"><label>Relationship to Owner 1</label><input data-k="rel"></div>
+  <div><label>Date of birth</label><input type="date" data-k="dob"></div>
+  <div><label>Mobile <b class="r1">*</b></label><input data-k="mob" inputmode="numeric" maxlength="10" data-v="mob"></div>
+  <div><label>Email</label><input type="email" data-k="email" data-v="email"></div>
+  <div><label>Lives in B-5404? <b>*</b></label><select data-k="res" required><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="full"><label>Present address (where actually residing) <b>*</b></label><textarea data-k="present" required></textarea></div>
+  <div class="full"><label>Permanent address with PIN <b>*</b></label><textarea data-k="perm" required></textarea></div>
+  <div><label>ID type <b>*</b></label><select data-k="idt" required><option value="">Select…</option><option>PAN</option><option>Aadhaar (masked)</option><option>Passport</option><option>Driving Licence</option><option>Voter ID</option></select></div>
+  <div><label>ID – last 4 characters <b>*</b></label><input data-k="id4" maxlength="4" required data-v="id4"></div>
+</div></div></template>
+
+<template id="tOcc"><div class="person"><div class="hd"><span class="t"></span><button type="button" class="rm">Remove</button></div><div class="grid">
+  <div class="full"><label>Full name <b>*</b></label><input data-k="name" required></div>
+  <div><label>Relationship to owner <b>*</b></label><input data-k="rel" required placeholder="e.g. son, niece, licensee"></div>
+  <div><label>Gender</label><select data-k="gender"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+  <div><label>Date of birth</label><input type="date" data-k="dob"></div>
+  <div><label>Father's / husband's name</label><input data-k="father"></div>
+  <div><label>Mobile</label><input data-k="mob" inputmode="numeric" maxlength="10" data-v="mob"></div>
+  <div><label>Email</label><input type="email" data-k="email" data-v="email"></div>
+  <div class="full"><label>Occupation and institution / employer</label><input data-k="occ"></div>
+  <div class="full"><label>Permanent address with PIN <b>*</b></label><textarea data-k="perm" required></textarea></div>
+  <div class="full"><label>Previous address (before moving in)</label><textarea data-k="prev"></textarea></div>
+  <div><label>Living in B-5404 since <b>*</b></label><input type="date" data-k="since" required></div>
+  <div><label>ID type</label><select data-k="idt"><option value="">Select…</option><option>Aadhaar (masked)</option><option>PAN</option><option>Passport</option><option>Driving Licence</option><option>Voter ID</option><option>Minor – no ID</option></select></div>
+  <div><label>ID – last 4 characters</label><input data-k="id4" maxlength="4" data-v="id4"></div>
+</div></div></template>
+
+<script>
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSf94sErd83be1uZFZr3kIPV2A-kJN4mAnHOWMwIteeXCIOhdA/formResponse';
+const E = {"Share Certificate No.": "524909775", "Owner 1": "101029308", "Owner 2": "609632572", "Owner 3": "1878794220", "Owner 4": "177459767", "Basis of occupation": "859944857", "L&L / other details": "78764877", "Rent or consideration paid": "1481965047", "Consideration details": "20980070", "Other person claiming right": "1035500087", "Person responsible for dues": "1994382010", "Occupied by others since": "190804762", "Vehicles": "405294196", "Domestic staff": "1264228119", "Mortgaged": "1221158881", "Bank and branch": "216972581", "Borrowers": "958972245", "Loan year": "861579302", "Society NOC for mortgage": "1054923419", "Loan closure details": "1890932464", "Occupant 1": "1959811862", "Occupant 2": "1444743928", "Occupant 3": "1013346168", "Occupant 4": "92786589", "Occupant 5": "355674910", "Occupant 6": "159968271", "Occupant 7": "320234759", "Occupant 8": "1223379418", "Occupant 9": "1280649840", "Occupant 10": "1169652243", "Declaration accepted": "1728413965", "Occupant consent": "1908187933", "Disclaimer acknowledged": "1380045541", "Submitted by": "1620984088", "Capacity": "118554059", "Client timestamp": "224215784"};
+const $ = s => document.querySelector(s);
+const F = $('#f');
+function addPerson(box, tpl, max, label, countEl, first) {
+  const n = box.children.length;
+  if (n >= max) return;
+  const node = document.getElementById(tpl).content.firstElementChild.cloneNode(true);
+  box.appendChild(node);
+  if (first) node.querySelector('.rm').remove();
+  node.querySelector('.rm') && (node.querySelector('.rm').onclick = () => { node.remove(); renum(box, label, countEl, max); });
+  renum(box, label, countEl, max);
+}
+function renum(box, label, countEl, max) {
+  [...box.children].forEach((p, i) => {
+    p.querySelector('.t').textContent = label + ' ' + (i + 1);
+    const rel = p.querySelector('.rel'); if (rel) rel.style.display = i ? '' : 'none';
+    const r1 = p.querySelector('.r1'); if (r1) { r1.style.display = i ? 'none' : ''; p.querySelector('[data-k=mob]').required = !i; }
+  });
+  countEl.textContent = box.children.length;
+  const btn = box === $('#owners') ? $('#addOwner') : $('#addOcc');
+  btn.disabled = box.children.length >= max;
+  btn.textContent = box.children.length >= max ? 'Maximum ' + max + ' reached' : (box === $('#owners') ? '+ Add joint owner' : '+ Add another person');
+}
+addPerson($('#owners'), 'tOwner', 4, 'Owner', $('#oc'), true);
+addPerson($('#occs'), 'tOcc', 10, 'Person', $('#pc'), true);
+$('#addOwner').onclick = () => addPerson($('#owners'), 'tOwner', 4, 'Owner', $('#oc'));
+$('#addOcc').onclick = () => addPerson($('#occs'), 'tOcc', 10, 'Person', $('#pc'));
+F.basis.onchange = () => $('#llBox').classList.toggle('hide', !/Leave|Other/.test(F.basis.value));
+F.consid.onchange = () => $('#cdBox').classList.toggle('hide', F.consid.value !== 'Yes');
+F.mort.onchange = () => document.querySelectorAll('.loan').forEach(e => e.classList.toggle('hide', F.mort.value === 'No' || !F.mort.value));
+
+function valid() {
+  let ok = true, first = null;
+  F.querySelectorAll('input,select,textarea').forEach(el => {
+    if (el.closest('.hide')) { el.classList.remove('bad'); return; }
+    let bad = false;
+    const v = (el.type === 'checkbox') ? el.checked : el.value.trim();
+    if (el.required && !v) bad = true;
+    if (!bad && el.value && el.dataset.v === 'mob' && !/^[6-9]\d{9}$/.test(el.value.trim())) bad = true;
+    if (!bad && el.value && el.dataset.v === 'email' && !/^\S+@\S+\.\S+$/.test(el.value.trim())) bad = true;
+    if (!bad && el.value && el.dataset.v === 'id4' && !/^[0-9A-Za-z]{4}$/.test(el.value.trim())) bad = true;
+    el.classList.toggle('bad', bad);
+    if (bad) { ok = false; first = first || el; }
+  });
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+function ser(p) {
+  return [...p.querySelectorAll('[data-k]')].filter(e => e.value.trim() && e.offsetParent !== null)
+    .map(e => e.closest('div').querySelector('label').textContent.replace('*', '').trim() + ': ' + e.value.trim()).join(' | ');
+}
+F.onsubmit = async ev => {
+  ev.preventDefault();
+  $('#msg').textContent = '';
+  if (!valid()) { $('#msg').textContent = 'Please complete the highlighted fields.'; return; }
+  const d = new URLSearchParams();
+  const put = (k, v) => { if (E[k] && v) d.append('entry.' + E[k], v); };
+  put('Share Certificate No.', F.share.value.trim());
+  [...$('#owners').children].forEach((p, i) => put('Owner ' + (i + 1), ser(p)));
+  [...$('#occs').children].forEach((p, i) => put('Occupant ' + (i + 1), ser(p)));
+  put('Basis of occupation', F.basis.value); put('L&L / other details', F.ll.value.trim());
+  put('Rent or consideration paid', F.consid.value); put('Consideration details', F.consid_d.value.trim());
+  put('Other person claiming right', F.claim.value.trim()); put('Person responsible for dues', F.dues_by.value.trim());
+  put('Occupied by others since', F.since_others.value.trim()); put('Vehicles', F.veh.value.trim()); put('Domestic staff', F.staff.value.trim());
+  put('Mortgaged', F.mort.value);
+  if (F.mort.value !== 'No') { put('Bank and branch', F.bank.value.trim()); put('Borrowers', F.borrowers.value.trim()); put('Loan year', F.lyear.value.trim()); put('Society NOC for mortgage', F.lnoc.value); put('Loan closure details', F.lclose.value.trim()); }
+  put('Declaration accepted', 'Yes'); put('Occupant consent', 'Yes'); put('Disclaimer acknowledged', 'Yes');
+  put('Submitted by', F.by.value.trim()); put('Capacity', F.cap.value); put('Client timestamp', new Date().toString());
+  $('#go').disabled = true; $('#go').textContent = 'Submitting…';
+  try {
+    await fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: d });
+    $('#app').innerHTML = '<div class="hero"><div class="reg">VENEZIA CO-OP HOUSING SOCIETY LTD</div><h1>Flat B-5404 – KYC</h1></div><div class="card done"><h2>Thank you</h2><p>Your details for Flat B-5404 have been received by the Society.</p><p style="font-size:13px;color:var(--muted)">Please hand over self-attested copies of the documents at the Society office or email them to mgmtcom.veneziab@gmail.com.</p></div>';
+  } catch (e) {
+    $('#go').disabled = false; $('#go').textContent = 'Submit';
+    $('#msg').textContent = 'Could not submit. Please check your internet connection and try again.';
+  }
+};
+</script>
+</body>
+</html>
